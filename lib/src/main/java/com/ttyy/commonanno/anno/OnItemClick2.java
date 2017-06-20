@@ -7,15 +7,15 @@ import java.lang.annotation.Target;
 
 /**
  * Author: hjq
- * Date  : 2017/06/19 19:30
- * Name  : BindLayout
+ * Date  : 2017/06/19 19:33
+ * Name  : OnClick
  * Intro : Edit By hjq
  * Version : 1.0
  */
 @Retention(RetentionPolicy.CLASS)
-@Target({ElementType.FIELD, ElementType.TYPE})
-public @interface BindLayout2 {
+@Target(ElementType.METHOD)
+public @interface OnItemClick2 {
 
-    String value();
+    String[] value();
 
 }

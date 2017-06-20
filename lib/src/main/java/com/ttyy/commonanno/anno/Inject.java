@@ -6,16 +6,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Author: hjq
- * Date  : 2017/06/19 19:29
- * Name  : BindView
- * Intro : Edit By hjq
- * Version : 1.0
+ * author: admin
+ * date: 2017/06/20
+ * version: 0
+ * mail: secret
+ * desc: Inject
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
-public @interface BindView2 {
-
-    String value() default "";
-
+@Target(ElementType.TYPE)
+public @interface Inject {
 }
