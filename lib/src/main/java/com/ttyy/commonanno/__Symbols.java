@@ -1,7 +1,5 @@
 package com.ttyy.commonanno;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-
 /**
  * author: admin
  * date: 2017/06/20
@@ -57,5 +55,7 @@ public class __Symbols {
     public static final String OBJ_RCLASS           =   "RClass";
     public static final String OBJ_RCLASS_LAYOUT    =   "RClassLayout";
     public static final String OBJ_RCLASS_ID        =   "RClassId";
+
+    public static final String ROUTE_PACKAGE        =   "com.ttyy.aboutroute";
 
 }

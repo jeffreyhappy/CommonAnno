@@ -5,10 +5,10 @@ package com.ttyy.commonanno.model;
  * date: 2017/06/20
  * version: 0
  * mail: secret
- * desc: BindLayoutCode
+ * desc: BindLayoutModel
  */
 
-public class BindLayoutCode {
+public class BindLayoutModel {
 
     protected String                strIdName;
     protected int                   nId;
@@ -16,28 +16,28 @@ public class BindLayoutCode {
     protected String strFieldType;
     protected String                strFieldName;
 
-    public BindLayoutCode(){
+    public BindLayoutModel(){
         strIdName = null;
         nId = -1;
         isContentView = false;
     }
 
-    public BindLayoutCode setIsContentView(boolean value){
+    public BindLayoutModel setIsContentView(boolean value){
         this.isContentView = value;
         return this;
     }
 
-    public BindLayoutCode setResourceId(int id){
+    public BindLayoutModel setResourceId(int id){
         this.nId = id;
         return this;
     }
 
-    public BindLayoutCode setResourceIdName(String name){
+    public BindLayoutModel setResourceIdName(String name){
         this.strIdName = name;
         return this;
     }
 
-    public BindLayoutCode setFieldType(String viewType){
+    public BindLayoutModel setFieldType(String viewType){
         this.strFieldType = viewType;
         return this;
     }
@@ -47,7 +47,7 @@ public class BindLayoutCode {
     }
 
 
-    public BindLayoutCode setFieldName(String name){
+    public BindLayoutModel setFieldName(String name){
         this.strFieldName = name;
         return this;
     }

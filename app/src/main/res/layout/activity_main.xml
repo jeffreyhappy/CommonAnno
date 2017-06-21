@@ -19,7 +19,18 @@
         android:layout_gravity="center_horizontal"/>
 
     <TextView
-        android:id="@+id/tv_jump"
+        android:id="@+id/tv_app_jump"
+        android:layout_width="220dp"
+        android:layout_height="50dp"
+        android:text="Hello App Module!"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:background="#ff00ff"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:id="@+id/tv_lib_jump"
         android:layout_width="220dp"
         android:layout_height="50dp"
         android:text="Hello Library Module!"

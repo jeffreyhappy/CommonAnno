@@ -5,27 +5,27 @@ package com.ttyy.commonanno.model;
  * date: 2017/06/20
  * version: 0
  * mail: secret
- * desc: BindViewCode
+ * desc: BindViewModel
  */
 
-public class BindViewCode {
+public class BindViewModel {
 
     protected String                strIdName;
     protected int                   nId;
     protected String strFieldType;
     protected String                strFieldName;
 
-    public BindViewCode setResourceIdName(String name){
+    public BindViewModel setResourceIdName(String name){
         this.strIdName = name;
         return this;
     }
 
-    public BindViewCode setResourceId(int id){
+    public BindViewModel setResourceId(int id){
         this.nId = id;
         return this;
     }
 
-    public BindViewCode setFieldType(String fieldType){
+    public BindViewModel setFieldType(String fieldType){
         this.strFieldType = fieldType;
         return this;
     }
@@ -34,7 +34,7 @@ public class BindViewCode {
         return strFieldType;
     }
 
-    public BindViewCode setFieldName(String name){
+    public BindViewModel setFieldName(String name){
         this.strFieldName = name;
         return this;
     }

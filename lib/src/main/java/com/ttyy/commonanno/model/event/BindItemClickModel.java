@@ -5,39 +5,39 @@ package com.ttyy.commonanno.model.event;
  * date: 2017/06/20
  * version: 0
  * mail: secret
- * desc: BindLongClickCode
+ * desc: BindItemClickModel
  */
 
-public class BindLongClickCode {
+public class BindItemClickModel {
 
     protected String[]                  strIdNames;
     protected int[]                     nIds;
-    protected BindEventMethodCode       mActionMethod;
+    protected BindEventMethodModel mActionMethod;
 
-    public BindLongClickCode setActionMethod(BindEventMethodCode method){
+    public BindItemClickModel setActionMethod(BindEventMethodModel method){
         this.mActionMethod = method;
         return this;
     }
 
-    public BindLongClickCode setLongClickResourceIds(int[] ids){
+    public BindItemClickModel setLongClickResourceIds(int[] ids){
         this.nIds = ids;
         return this;
     }
 
-    public BindLongClickCode setLongClickResourceIdNames(String[] idNames){
+    public BindItemClickModel setLongClickResourceIdNames(String[] idNames){
         this.strIdNames = idNames;
         return this;
     }
 
-    public int[] getLongClickResourceIds(){
+    public int[] getItemClickResourceIds(){
         return nIds;
     }
 
-    public String[] getLongClickResourceIdNames(){
+    public String[] getItemClickResourceIdNames(){
         return strIdNames;
     }
 
-    public BindEventMethodCode getActionMethod(){
+    public BindEventMethodModel getActionMethod(){
         return mActionMethod;
     }
 }

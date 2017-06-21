@@ -14,15 +14,20 @@ import com.ttyy.commonanno.anno.BindView;
 import com.ttyy.commonanno.anno.OnClick;
 import com.ttyy.commonanno.anno.OnItemClick;
 import com.ttyy.commonanno.anno.OnLongClick;
+import com.ttyy.commonanno.anno.route.BindRoute;
 
+@BindRoute("jin.test.ui.main")
 @BindLayout(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.tv_hello)
     TextView tv_hello;
 
-    @BindView(R.id.tv_jump)
+    @BindView(R.id.tv_lib_jump)
     TextView tv_jump;
+
+    @BindView(R.id.tv_app_jump)
+    TextView tv_app_jump;
 
     @BindView(R.id.lv_1)
     ListView lv_1;
@@ -40,14 +45,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @OnClick(R.id.tv_jump)
-    void jumpOnClickJump(){
-
+    @OnClick(R.id.tv_app_jump)
+    void jumpOnClickAppJump(){
+        JinInjector.get().buildRouter("jin.test.ui.appsecond")
+                .navigate(this);
     }
 
-    @OnLongClick(R.id.tv_jump)
+    @OnClick(R.id.tv_lib_jump)
+    void jumpOnClickLibJump(){
+        JinInjector.get().buildRouter("jin.test.libmain")
+                .navigate(this);
+    }
+
+    @OnLongClick(R.id.tv_lib_jump)
     void logOnClickJump(){
-        Log.e("Test", "onLongClickJum[!");
+        Log.e("Test", "onLongClickJump!");
     }
 
     @OnClick(R.id.tv_hello)

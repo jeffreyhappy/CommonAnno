@@ -10,13 +10,13 @@ import com.ttyy.commonanno.anno.OnItemClick;
 import com.ttyy.commonanno.anno.OnItemClick2;
 import com.ttyy.commonanno.anno.OnLongClick;
 import com.ttyy.commonanno.anno.OnLongClick2;
-import com.ttyy.commonanno.model.BindClassCode;
-import com.ttyy.commonanno.model.BindLayoutCode;
-import com.ttyy.commonanno.model.BindViewCode;
-import com.ttyy.commonanno.model.event.BindClickCode;
-import com.ttyy.commonanno.model.event.BindEventMethodCode;
-import com.ttyy.commonanno.model.event.BindItemClickCode;
-import com.ttyy.commonanno.model.event.BindLongClickCode;
+import com.ttyy.commonanno.model.BindClassModel;
+import com.ttyy.commonanno.model.BindLayoutModel;
+import com.ttyy.commonanno.model.BindViewModel;
+import com.ttyy.commonanno.model.event.BindClickModel;
+import com.ttyy.commonanno.model.event.BindEventMethodModel;
+import com.ttyy.commonanno.model.event.BindItemClickModel;
+import com.ttyy.commonanno.model.event.BindLongClickModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,9 +44,10 @@ public class $BindClassFilter {
 
     }
 
-    public static final ArrayList<BindClassCode> filter(RoundEnvironment env, Elements mElements){
-        HashMap<String, BindClassCode> maps = new HashMap<>();
+    public static final ArrayList<BindClassModel> filter(RoundEnvironment env, Elements mElements){
+        HashMap<String, BindClassModel> maps = new HashMap<>();
 
+        // BindLayout Annotated Class Need To Create Special JinClass File First
         for(Element e : env.getElementsAnnotatedWith(BindLayout.class)){
             if(e.getKind() != ElementKind.CLASS){
                 continue;
@@ -54,19 +55,20 @@ public class $BindClassFilter {
 
             TypeElement mClassElement = (TypeElement) e;
 
-            BindClassCode tmp = new BindClassCode(mClassElement);
+            BindClassModel tmp = new BindClassModel(mClassElement);
             String strPackageName = getTypeElementPackageName(mClassElement, mElements);
             String strClassName = mClassElement.getQualifiedName().toString();
             tmp.setPackageName(strPackageName).setClassName(strClassName);
 
             if(maps.get(tmp.getSelfClassName()) != null){
+                // Has Created The Class Document Object
                 continue;
             }else {
                 maps.put(tmp.getSelfClassName(), tmp);
             }
 
             BindLayout annoBindLayout = e.getAnnotation(BindLayout.class);
-            BindLayoutCode contentView = new BindLayoutCode();
+            BindLayoutModel contentView = new BindLayoutModel();
             int viewId = annoBindLayout.value();
             contentView.setIsContentView(true).setResourceId(viewId);
             tmp.setContentView(contentView);
@@ -74,6 +76,7 @@ public class $BindClassFilter {
             getChildElementAnnos(mClassElement, tmp);
         }
 
+        // BindLayout2  Annotated Class Need To Create Special JinClass File Second
         for(Element e : env.getElementsAnnotatedWith(BindLayout2.class)){
             if(e.getKind() != ElementKind.CLASS){
                 continue;
@@ -81,19 +84,20 @@ public class $BindClassFilter {
 
             TypeElement mClassElement = (TypeElement) e;
 
-            BindClassCode tmp = new BindClassCode(mClassElement);
+            BindClassModel tmp = new BindClassModel(mClassElement);
             String strPackageName = getTypeElementPackageName(mClassElement, mElements);
             String strClassName = mClassElement.getQualifiedName().toString();
             tmp.setPackageName(strPackageName).setClassName(strClassName);
 
             if(maps.get(tmp.getSelfClassName()) != null){
+                // Has Created The Class Document Object
                 continue;
             }else {
                 maps.put(tmp.getSelfClassName(), tmp);
             }
 
             BindLayout2 annoBindLayout2 = e.getAnnotation(BindLayout2.class);
-            BindLayoutCode contentView = new BindLayoutCode();
+            BindLayoutModel contentView = new BindLayoutModel();
             String viewIdName = annoBindLayout2.value();
             contentView.setIsContentView(true).setResourceIdName(viewIdName);
             tmp.setContentView(contentView);
@@ -101,6 +105,7 @@ public class $BindClassFilter {
             getChildElementAnnos(mClassElement, tmp);
         }
 
+        // Inject Annotated Class Need To Create Special JinClass File Third
         for(Element e : env.getElementsAnnotatedWith(Inject.class)){
             if(e.getKind() != ElementKind.CLASS){
                 continue;
@@ -108,12 +113,13 @@ public class $BindClassFilter {
 
             TypeElement mClassElement = (TypeElement) e;
 
-            BindClassCode tmp = new BindClassCode(mClassElement);
+            BindClassModel tmp = new BindClassModel(mClassElement);
             String strPackageName = getTypeElementPackageName(mClassElement, mElements);
             String strClassName = mClassElement.getQualifiedName().toString();
             tmp.setPackageName(strPackageName).setClassName(strClassName);
 
             if(maps.get(tmp.getSelfClassName()) != null){
+                // Has Created The Class Document Object
                 continue;
             }else {
                 maps.put(tmp.getSelfClassName(), tmp);
@@ -125,7 +131,7 @@ public class $BindClassFilter {
         return new ArrayList<>(maps.values());
     }
 
-    static final void getChildElementAnnos(TypeElement typeElement, BindClassCode code){
+    static final void getChildElementAnnos(TypeElement typeElement, BindClassModel code){
         for(Element e : typeElement.getEnclosedElements()){
 
             if(injectMemberView(e, code)){
@@ -137,9 +143,9 @@ public class $BindClassFilter {
         }
     }
 
-    static final boolean injectMemberView(Element e, BindClassCode code){
+    static final boolean injectMemberView(Element e, BindClassModel code){
         if(e.getAnnotation(BindView.class) != null){
-            BindViewCode viewCode = new BindViewCode();
+            BindViewModel viewCode = new BindViewModel();
 
             BindView bindView = e.getAnnotation(BindView.class);
             viewCode.setResourceId(bindView.value());
@@ -151,7 +157,7 @@ public class $BindClassFilter {
             code.addFindView(viewCode);
 
         }else if(e.getAnnotation(BindLayout.class) != null){
-            BindLayoutCode layoutCode = new BindLayoutCode();
+            BindLayoutModel layoutCode = new BindLayoutModel();
 
             BindLayout bindLayout = e.getAnnotation(BindLayout.class);
             layoutCode.setResourceId(bindLayout.value());
@@ -163,7 +169,7 @@ public class $BindClassFilter {
             code.addInflateLayout(layoutCode);
 
         }else if(e.getAnnotation(BindLayout2.class) != null){
-            BindLayoutCode layoutCode = new BindLayoutCode();
+            BindLayoutModel layoutCode = new BindLayoutModel();
 
             BindLayout2 bindLayout2 = e.getAnnotation(BindLayout2.class);
             layoutCode.setResourceIdName(bindLayout2.value());
@@ -180,9 +186,9 @@ public class $BindClassFilter {
         return true;
     }
 
-    static final boolean injectMemberEvent(Element e, BindClassCode code){
+    static final boolean injectMemberEvent(Element e, BindClassModel code){
         if(e.getAnnotation(OnClick.class) != null){
-            BindClickCode clickCode = new BindClickCode();
+            BindClickModel clickCode = new BindClickModel();
 
             OnClick onClick = e.getAnnotation(OnClick.class);
             clickCode.setOnClickResourceIds(onClick.value())
@@ -191,7 +197,7 @@ public class $BindClassFilter {
             code.addOnClick(clickCode);
 
         }else if(e.getAnnotation(OnClick2.class) != null){
-            BindClickCode clickCode = new BindClickCode();
+            BindClickModel clickCode = new BindClickModel();
 
             OnClick2 onClick2 = e.getAnnotation(OnClick2.class);
             clickCode.setOnClickResourceIdNames(onClick2.value())
@@ -200,7 +206,7 @@ public class $BindClassFilter {
             code.addOnClick(clickCode);
 
         }else if(e.getAnnotation(OnLongClick.class) != null){
-            BindLongClickCode longClickCode = new BindLongClickCode();
+            BindLongClickModel longClickCode = new BindLongClickModel();
 
             OnLongClick onLongClick = e.getAnnotation(OnLongClick.class);
             longClickCode.setLongClickResourceIds(onLongClick.value())
@@ -209,7 +215,7 @@ public class $BindClassFilter {
             code.addOnLongClick(longClickCode);
 
         }else if(e.getAnnotation(OnLongClick2.class) != null){
-            BindLongClickCode longClickCode = new BindLongClickCode();
+            BindLongClickModel longClickCode = new BindLongClickModel();
 
             OnLongClick2 onLongClick2 = e.getAnnotation(OnLongClick2.class);
             longClickCode.setLongClickResourceIdNames(onLongClick2.value())
@@ -218,7 +224,7 @@ public class $BindClassFilter {
             code.addOnLongClick(longClickCode);
 
         }else if(e.getAnnotation(OnItemClick.class) != null){
-            BindItemClickCode itemClickCode = new BindItemClickCode();
+            BindItemClickModel itemClickCode = new BindItemClickModel();
 
             OnItemClick onItemClick = e.getAnnotation(OnItemClick.class);
             itemClickCode.setLongClickResourceIds(onItemClick.value())
@@ -227,7 +233,7 @@ public class $BindClassFilter {
             code.addOnItemClick(itemClickCode);
 
         }else if(e.getAnnotation(OnItemClick2.class) != null){
-            BindItemClickCode itemClickCode = new BindItemClickCode();
+            BindItemClickModel itemClickCode = new BindItemClickModel();
 
             OnItemClick2 onItemClick2 = e.getAnnotation(OnItemClick2.class);
             itemClickCode.setLongClickResourceIdNames(onItemClick2.value())
@@ -242,9 +248,9 @@ public class $BindClassFilter {
         return true;
     }
 
-    static final BindEventMethodCode getActionMethod(ExecutableElement e){
+    static final BindEventMethodModel getActionMethod(ExecutableElement e){
 
-        BindEventMethodCode methodCode = new BindEventMethodCode();
+        BindEventMethodModel methodCode = new BindEventMethodModel();
         methodCode.setMethodName(e.getSimpleName().toString())
                 .setReturnType(e.getReturnType().toString());
 
@@ -252,7 +258,7 @@ public class $BindClassFilter {
         int index = 0;
         for(VariableElement tmp : parameters){
 
-            BindEventMethodCode.Parameter param = new BindEventMethodCode.Parameter();
+            BindEventMethodModel.Parameter param = new BindEventMethodModel.Parameter();
             param.strParameterType = tmp.asType().toString();
             param.strParameterName = "var"+index;
             index++;

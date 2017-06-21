@@ -5,10 +5,10 @@ package com.ttyy.commonanno;
  * date: 2017/06/20
  * version: 0
  * mail: secret
- * desc: __InjectIntf
+ * desc: __BindInjectIntf
  */
 
-public interface __InjectIntf<T> {
+public interface __BindInjectIntf<T> {
 
     void inject(Finder type, Class<?> RClass, Object source, T target);
 

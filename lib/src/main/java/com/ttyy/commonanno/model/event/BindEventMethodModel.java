@@ -9,10 +9,10 @@ import java.util.LinkedList;
  * date: 2017/06/20
  * version: 0
  * mail: secret
- * desc: BindEventMethodCode
+ * desc: BindEventMethodModel
  */
 
-public class BindEventMethodCode {
+public class BindEventMethodModel {
 
     protected String                    strMethodName;
     protected String                    strReturnType;
@@ -44,21 +44,21 @@ public class BindEventMethodCode {
 
     }
 
-    public BindEventMethodCode(){
+    public BindEventMethodModel(){
         mParameters = new LinkedList<>();
     }
 
-    public BindEventMethodCode setMethodName(String name){
+    public BindEventMethodModel setMethodName(String name){
         this.strMethodName = name;
         return this;
     }
 
-    public BindEventMethodCode setReturnType(String returnType){
+    public BindEventMethodModel setReturnType(String returnType){
         this.strReturnType = returnType;
         return this;
     }
 
-    public BindEventMethodCode addParameter(Parameter param){
+    public BindEventMethodModel addParameter(Parameter param){
         this.mParameters.add(param);
         return this;
     }
@@ -72,7 +72,8 @@ public class BindEventMethodCode {
 
         if(sourceParams != null
                 && sourceParams.size() > 0){
-            for(Parameter selfParam : mParameters){
+            for(int i = 0 ; i < mParameters.size(); i++){
+                Parameter selfParam = mParameters.get(i);
                 String paramValue = selfParam.getDefaultValue();
 
                 for(Parameter sourceParam : sourceParams){
@@ -82,7 +83,10 @@ public class BindEventMethodCode {
                     }
                 }
 
-                sb.append(paramValue).append(__Symbols.PARAM_DIVIDER);
+                sb.append(paramValue);
+                if(i < mParameters.size() - 1){
+                    sb.append(__Symbols.PARAM_DIVIDER);
+                }
             }
         }
 

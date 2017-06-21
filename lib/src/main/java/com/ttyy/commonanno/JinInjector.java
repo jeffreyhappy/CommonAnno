@@ -1,5 +1,7 @@
 package com.ttyy.commonanno;
 
+import com.ttyy.commonanno.model.route.BindRouteImplClassModel;
+
 import java.util.HashMap;
 
 /**
@@ -12,7 +14,7 @@ import java.util.HashMap;
 
 public class JinInjector {
 
-    HashMap<String, __InjectIntf> intfs;
+    HashMap<String, __BindInjectIntf> intfs;
 
     Class<?> mTmpRClass;
 
@@ -45,7 +47,7 @@ public class JinInjector {
     public void inject(Finder finder, Object from, Object to) {
         String targetClazzName = to.getClass().getCanonicalName();
 
-        __InjectIntf intf = intfs.get(targetClazzName);
+        __BindInjectIntf intf = intfs.get(targetClazzName);
         if (intf == null) {
             int subLen = to.getClass().getPackage().getName().length() + 1;
             String aboutClassName = targetClazzName.substring(subLen);
@@ -61,7 +63,7 @@ public class JinInjector {
 
             try {
                 Class intfClass = Class.forName(injectClazzName);
-                intf = (__InjectIntf) intfClass.newInstance();
+                intf = (__BindInjectIntf) intfClass.newInstance();
                 intfs.put(targetClazzName, intf);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -77,6 +79,44 @@ public class JinInjector {
         }
 
         mTmpRClass = null;
+    }
+
+    public __RouterIntf buildRouter(String url){
+
+        __RouterIntf intf = null;
+        try {
+            Class<__RouterIntf> intfClass = (Class<__RouterIntf>) Class.forName(BindRouteImplClassModel.ROUTE_IMPL.getSelfClassName());
+            intf = intfClass.newInstance();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        intf.setRouteUri(url);
+
+        return intf;
+    }
+
+    public __RouterIntf buildRouter(Class targetCls){
+
+        __RouterIntf intf = null;
+        try {
+            Class<__RouterIntf> intfClass = (Class<__RouterIntf>) Class.forName(BindRouteImplClassModel.ROUTE_IMPL.getSelfClassName());
+            intf = intfClass.newInstance();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        intf.setRouteClass(targetCls);
+
+        return intf;
     }
 
 }

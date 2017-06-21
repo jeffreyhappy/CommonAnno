@@ -1,12 +1,13 @@
 package com.ttyy.commonanno.model;
 
 import com.ttyy.commonanno.Finder;
-import com.ttyy.commonanno.__InjectIntf;
+import com.ttyy.commonanno.__BindInjectIntf;
 import com.ttyy.commonanno.__Symbols;
-import com.ttyy.commonanno.model.event.BindClickCode;
-import com.ttyy.commonanno.model.event.BindEventMethodCode;
-import com.ttyy.commonanno.model.event.BindItemClickCode;
-import com.ttyy.commonanno.model.event.BindLongClickCode;
+import com.ttyy.commonanno.model.event.BindClickModel;
+import com.ttyy.commonanno.model.event.BindEventMethodModel;
+import com.ttyy.commonanno.model.event.BindItemClickModel;
+import com.ttyy.commonanno.model.event.BindLongClickModel;
+import com.ttyy.commonanno.model.route.BindExtraModel;
 import com.ttyy.commonanno.util.$RClassCodeUtil;
 
 import java.util.LinkedList;
@@ -18,47 +19,50 @@ import javax.lang.model.element.TypeElement;
  * date: 2017/06/20
  * version: 0
  * mail: secret
- * desc: BindClassCode
+ * desc: BindClassModel
  */
 
-public class BindClassCode {
+public class BindClassModel {
 
     String strPackageName;
     String strParentClassName;
     String strSelfClassName;
     TypeElement mTypeElement;
 
-    BindLayoutCode contentView;
+    BindLayoutModel contentView;
 
-    LinkedList<BindViewCode> views;
+    LinkedList<BindViewModel> views;
 
-    LinkedList<BindLayoutCode> layouts;
+    LinkedList<BindLayoutModel> layouts;
 
-    LinkedList<BindClickCode> onClicks;
+    LinkedList<BindExtraModel> extras;
 
-    LinkedList<BindLongClickCode> onLongClicks;
+    LinkedList<BindClickModel> onClicks;
 
-    LinkedList<BindItemClickCode> onItemClicks;
+    LinkedList<BindLongClickModel> onLongClicks;
 
-    public BindClassCode(TypeElement element) {
+    LinkedList<BindItemClickModel> onItemClicks;
+
+    public BindClassModel(TypeElement element) {
         mTypeElement = element;
         views = new LinkedList<>();
         layouts = new LinkedList<>();
         onClicks = new LinkedList<>();
         onLongClicks = new LinkedList<>();
         onItemClicks = new LinkedList<>();
+        extras = new LinkedList<>();
     }
 
     public TypeElement getTypeElement() {
         return mTypeElement;
     }
 
-    public BindClassCode setPackageName(String pkg) {
+    public BindClassModel setPackageName(String pkg) {
         this.strPackageName = pkg;
         return this;
     }
 
-    public BindClassCode setClassName(String className) {
+    public BindClassModel setClassName(String className) {
         this.strParentClassName = className;
 
         int subLen = strPackageName.length() + 1;
@@ -92,32 +96,32 @@ public class BindClassCode {
         return strSelfClassName.substring(strPackageName.length() + 1);
     }
 
-    public BindClassCode setContentView(BindLayoutCode code) {
+    public BindClassModel setContentView(BindLayoutModel code) {
         this.contentView = code;
         return this;
     }
 
-    public BindClassCode addFindView(BindViewCode code) {
+    public BindClassModel addFindView(BindViewModel code) {
         this.views.add(code);
         return this;
     }
 
-    public BindClassCode addInflateLayout(BindLayoutCode code) {
+    public BindClassModel addInflateLayout(BindLayoutModel code) {
         this.layouts.add(code);
         return this;
     }
 
-    public BindClassCode addOnClick(BindClickCode code) {
+    public BindClassModel addOnClick(BindClickModel code) {
         this.onClicks.add(code);
         return this;
     }
 
-    public BindClassCode addOnLongClick(BindLongClickCode code) {
+    public BindClassModel addOnLongClick(BindLongClickModel code) {
         this.onLongClicks.add(code);
         return this;
     }
 
-    public BindClassCode addOnItemClick(BindItemClickCode code) {
+    public BindClassModel addOnItemClick(BindItemClickModel code) {
         this.onItemClicks.add(code);
         return this;
     }
@@ -141,7 +145,7 @@ public class BindClassCode {
         sb.append("import android.view.View;\n");
         sb.append("import android.widget.AdapterView;\n");
 
-        // public class xx.xx.xxx.xxx$xxx$$JinClass implements __InjectIntf{
+        // public class xx.xx.xxx.xxx$xxx$$JinClass implements __BindInjectIntf{
         sb.append(__Symbols.AUTH_PUBLIC)
                 .append(__Symbols.TYPE_CLASS)
                 .append(getSelfClassSimpleName())
@@ -149,7 +153,7 @@ public class BindClassCode {
                 .append(__Symbols.ACTION_EXTEND)
                 .append(strParentClassName)
                 .append(__Symbols.ACTION_IMPL)
-                .append(__InjectIntf.class.getCanonicalName())
+                .append(__BindInjectIntf.class.getCanonicalName())
                 .append("<T>")
                 .append(__Symbols.CODE_START);
 
@@ -200,14 +204,14 @@ public class BindClassCode {
             }
         }
 
-        for (BindViewCode tmp : views) {
+        for (BindViewModel tmp : views) {
             sb.append("final int ")
                     .append(tmp.getResourceIdName())
                     .append(__Symbols.MATH_EQUAL);
             if (tmp.getResourceId() == -1) {
                 sb.append("(int)")
                         .append(__Symbols.OBJ_RCLASS_ID)
-                        .append("getField(")
+                        .append(".getField(")
                         .append("\"").append(tmp.getResourceIdName()).append("\"")
                         .append(")")
                         .append(".get(")
@@ -219,7 +223,7 @@ public class BindClassCode {
             }
         }
 
-        for (BindLayoutCode tmp : layouts) {
+        for (BindLayoutModel tmp : layouts) {
             sb.append("final int ")
                     .append(tmp.getResourceIdName())
                     .append(__Symbols.MATH_EQUAL);
@@ -244,7 +248,7 @@ public class BindClassCode {
             sb.append(Finder.Activity.setContentView("$$JinContentViewId"));
         }
 
-        for (BindViewCode tmp : views) {
+        for (BindViewModel tmp : views) {
             sb.append(__Symbols.OBJ_TARGET).append(__Symbols.DOT_DIVIDER)
                     .append(tmp.getFieldName()).append(__Symbols.MATH_EQUAL);
 
@@ -252,7 +256,7 @@ public class BindClassCode {
             sb.append(Finder.Activity.findViewById(tmp.getResourceIdName()));
         }
 
-        for (BindLayoutCode tmp : layouts) {
+        for (BindLayoutModel tmp : layouts) {
             sb.append(__Symbols.OBJ_TARGET).append(__Symbols.DOT_DIVIDER)
                     .append(tmp.getFieldName()).append(__Symbols.MATH_EQUAL);
 
@@ -265,7 +269,7 @@ public class BindClassCode {
             sb.append(Finder.View.setContentView("$$JinContentViewId"));
         }
 
-        for (BindViewCode tmp : views) {
+        for (BindViewModel tmp : views) {
             sb.append(__Symbols.OBJ_TARGET).append(__Symbols.DOT_DIVIDER)
                     .append(tmp.getFieldName()).append(__Symbols.MATH_EQUAL);
 
@@ -273,7 +277,7 @@ public class BindClassCode {
             sb.append(Finder.View.findViewById(tmp.getResourceIdName()));
         }
 
-        for (BindLayoutCode tmp : layouts) {
+        for (BindLayoutModel tmp : layouts) {
             sb.append(__Symbols.OBJ_TARGET).append(__Symbols.DOT_DIVIDER)
                     .append(tmp.getFieldName()).append(__Symbols.MATH_EQUAL);
 
@@ -294,13 +298,13 @@ public class BindClassCode {
                 .append("public void onClick(View v) {\n");
         sb.append("switch (v.getId()){\n");
 
-        LinkedList<BindEventMethodCode.Parameter> onClickParameters = new LinkedList<>();
-        BindEventMethodCode.Parameter onClickParam0 = new BindEventMethodCode.Parameter();
+        LinkedList<BindEventMethodModel.Parameter> onClickParameters = new LinkedList<>();
+        BindEventMethodModel.Parameter onClickParam0 = new BindEventMethodModel.Parameter();
         onClickParam0.strParameterType = "android.view.View";
         onClickParam0.strParameterName = "v";
         onClickParameters.add(onClickParam0);
 
-        for (BindClickCode tmp : onClicks) {
+        for (BindClickModel tmp : onClicks) {
             if (tmp.getOnClickResourceIds() != null) {
                 for (int id : tmp.getOnClickResourceIds()) {
                     sb.append("case ").append(id).append(":\n");
@@ -320,7 +324,7 @@ public class BindClassCode {
         sb.append("\n}\n};\n");
 
         // setOnClickListener
-        for (BindClickCode tmp : onClicks) {
+        for (BindClickModel tmp : onClicks) {
             if (tmp.getOnClickResourceIds() != null) {
                 sb.append("if (type == Finder.Activity){\n");
                 for (int id : tmp.getOnClickResourceIds()) {
@@ -376,13 +380,13 @@ public class BindClassCode {
                 .append("public boolean onLongClick(View v) {\n");
         sb.append("switch (v.getId()){\n");
 
-        LinkedList<BindEventMethodCode.Parameter> onLongClickParameters = new LinkedList<>();
-        BindEventMethodCode.Parameter onLongClickParam0 = new BindEventMethodCode.Parameter();
+        LinkedList<BindEventMethodModel.Parameter> onLongClickParameters = new LinkedList<>();
+        BindEventMethodModel.Parameter onLongClickParam0 = new BindEventMethodModel.Parameter();
         onLongClickParam0.strParameterType = "android.view.View";
         onLongClickParam0.strParameterName = "v";
         onLongClickParameters.add(onLongClickParam0);
 
-        for (BindLongClickCode tmp : onLongClicks) {
+        for (BindLongClickModel tmp : onLongClicks) {
             if (tmp.getLongClickResourceIds() != null) {
                 for (int id : tmp.getLongClickResourceIds()) {
                     sb.append("case ").append(id).append(":\n");
@@ -402,7 +406,7 @@ public class BindClassCode {
         sb.append("return true;\n}\n};");
 
         // setOnLongClickListener
-        for (BindClickCode tmp : onClicks) {
+        for (BindClickModel tmp : onClicks) {
             if (tmp.getOnClickResourceIds() != null) {
                 sb.append("if (type == Finder.Activity){\n");
                 for (int id : tmp.getOnClickResourceIds()) {
@@ -442,7 +446,7 @@ public class BindClassCode {
                             .append("onLongClickListener")
                             .append(");\n");
                 }
-                sb.append("\n}");
+                sb.append("\n}\n");
             }
         }
         // onItemClick事件
@@ -452,58 +456,61 @@ public class BindClassCode {
         //
         //     }
         // };
-        LinkedList<BindEventMethodCode.Parameter> onItemClickParameters = new LinkedList<>();
+        LinkedList<BindEventMethodModel.Parameter> onItemClickParameters = new LinkedList<>();
 
-        BindEventMethodCode.Parameter onItemClickParam0 = new BindEventMethodCode.Parameter();
+        BindEventMethodModel.Parameter onItemClickParam0 = new BindEventMethodModel.Parameter();
         onItemClickParam0.strParameterType = "android.widget.AdapterView";
         onItemClickParam0.strParameterName = "parent";
         onItemClickParameters.add(onItemClickParam0);
 
-        BindEventMethodCode.Parameter onItemClickParam1 = new BindEventMethodCode.Parameter();
+        BindEventMethodModel.Parameter onItemClickParam1 = new BindEventMethodModel.Parameter();
         onItemClickParam1.strParameterType = "android.view.View";
         onItemClickParam1.strParameterName = "view";
         onItemClickParameters.add(onItemClickParam1);
 
-        BindEventMethodCode.Parameter onItemClickParam2 = new BindEventMethodCode.Parameter();
+        BindEventMethodModel.Parameter onItemClickParam2 = new BindEventMethodModel.Parameter();
         onItemClickParam2.strParameterType = "int";
         onItemClickParam2.strParameterName = "position";
         onItemClickParameters.add(onItemClickParam2);
 
-        BindEventMethodCode.Parameter onItemClickParam3 = new BindEventMethodCode.Parameter();
+        BindEventMethodModel.Parameter onItemClickParam3 = new BindEventMethodModel.Parameter();
         onItemClickParam3.strParameterType = "long";
         onItemClickParam3.strParameterName = "id";
         onItemClickParameters.add(onItemClickParam3);
 
         int i = 0;
-        for (BindItemClickCode tmp : onItemClicks) {
+        for (BindItemClickModel tmp : onItemClicks) {
             if (tmp.getItemClickResourceIds() != null) {
                 for (int id : tmp.getItemClickResourceIds()) {
+                    // Initialize OnItemListener Object
                     sb.append("AdapterView.OnItemClickListener onItemClickListener").append(i)
                             .append("= new AdapterView.OnItemClickListener() {\n")
                             .append("@Override\n")
                             .append("public void onItemClick(AdapterView<?> parent, View view, int position, long id) {\n");
-                    tmp.getActionMethod().toUse(onItemClickParameters);
+                    sb.append(tmp.getActionMethod().toUse(onItemClickParameters));
                     sb.append("\n}\n};");
 
+                    // setOnItemClickListener
                     sb.append("if (type == Finder.Activity){\n")
                             .append("((android.widget.ListView)")
                             .append("((Activity)").append(__Symbols.OBJ_SOURCE).append(")")
-                            .append("findViewById(")
+                            .append(".findViewById(")
                             .append(id)
                             .append(")).setOnItemClickListener(")
                             .append("onItemClickListener").append(i)
-                            .append(")")
-                            .append("\n}");
+                            .append(");")
+                            .append("\n}\n");
 
+                    // setOnItemClickListener
                     sb.append("else if (type == Finder.View){\n")
                             .append("((android.widget.ListView)")
                             .append("((View)").append(__Symbols.OBJ_SOURCE).append(")")
-                            .append("findViewById(")
+                            .append(".findViewById(")
                             .append(id)
                             .append(")).setOnItemClickListener(")
                             .append("onItemClickListener").append(i)
-                            .append(")")
-                            .append("\n}");
+                            .append(");")
+                            .append("\n}\n");
 
                     i++;
                 }
@@ -513,28 +520,28 @@ public class BindClassCode {
                             .append("= new AdapterView.OnItemClickListener() {\n")
                             .append("@Override\n")
                             .append("public void onItemClick(AdapterView<?> parent, View view, int position, long id) {\n");
-                    tmp.getActionMethod().toUse(onItemClickParameters);
+                    sb.append(tmp.getActionMethod().toUse(onItemClickParameters));
                     sb.append("\n}\n};");
 
                     sb.append("if (type == Finder.Activity){\n")
                             .append("((ListView)")
                             .append("((Activity)").append(__Symbols.OBJ_SOURCE).append(")")
-                            .append("findViewById(")
+                            .append(".findViewById(")
                             .append(idName)
                             .append(")).setOnItemClickListener(")
                             .append("onItemClickListener").append(i)
-                            .append(")")
-                            .append("\n}");
+                            .append(");")
+                            .append("\n}\n");
 
                     sb.append("else if (type == Finder.View){\n")
                             .append("((ListView)")
                             .append("((View)").append(__Symbols.OBJ_SOURCE).append(")")
-                            .append("findViewById(")
+                            .append(".findViewById(")
                             .append(idName)
                             .append(")).setOnItemClickListener(")
                             .append("onItemClickListener").append(i)
-                            .append(")")
-                            .append("\n}");
+                            .append(");")
+                            .append("\n}\n");
 
                     i++;
                 }
