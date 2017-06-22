@@ -10,14 +10,15 @@ import com.ttyy.commonanno.anno.OnItemClick;
 import com.ttyy.commonanno.anno.OnItemClick2;
 import com.ttyy.commonanno.anno.OnLongClick;
 import com.ttyy.commonanno.anno.OnLongClick2;
+import com.ttyy.commonanno.anno.route.BindExtra;
 import com.ttyy.commonanno.anno.route.BindRoute;
 import com.ttyy.commonanno.filter.$BindClassFilter;
 import com.ttyy.commonanno.filter.$BindRouteFilter;
 import com.ttyy.commonanno.model.BindClassModel;
 import com.ttyy.commonanno.model.route.BindRouteImplClassModel;
 import com.ttyy.commonanno.model.route.BindRouteProviderClassModel;
-import com.ttyy.commonanno.util.$$RouteProvider;
 import com.ttyy.commonanno.util.$$RouteProviderModulePool;
+import com.ttyy.commonanno.util.$ProcessorLog;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -32,10 +33,8 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
-import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
 /**
@@ -47,17 +46,18 @@ import javax.tools.JavaFileObject;
  */
 public class __AnnotationProcessor extends AbstractProcessor {
 
-    Messager mPrinter;
     Filer mFiler;
     Elements mElements;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
-        mPrinter = processingEnv.getMessager();
         mFiler = processingEnv.getFiler();
         mElements = processingEnv.getElementUtils();
 
+        // logger init
+        Messager mPrinter = processingEnv.getMessager();
+        $ProcessorLog.init(mPrinter);
     }
 
     @Override
@@ -86,16 +86,23 @@ public class __AnnotationProcessor extends AbstractProcessor {
             }
         }
 
-        // 若此类已存在那么忽略创建
-        Class routerIntfClass = null;
-        try {
-            routerIntfClass = Class.forName(BindRouteImplClassModel.ROUTE_IMPL.getSelfClassName());
-        } catch (ClassNotFoundException e) {
-            mPrinter.printMessage(Diagnostic.Kind.NOTE, "Class " + BindRouteImplClassModel.ROUTE_IMPL.getSelfClassName() + " Exists!");
+        if (typeElement == null) {
+            return false;
+        } else {
+            $$RouteProviderModulePool.get().findCurrentProjectModules(typeElement);
         }
 
-        // router
-        if (typeElement != null && routerIntfClass == null) {
+        // provider
+        $ProcessorLog.log("Getting RouteProvider Class Index From NamePool...");
+        String moduleIndex = $$RouteProviderModulePool.get().getTemplateModuleName();
+        $ProcessorLog.log("Find And Creating RouteProvider With ModuleIndex " + moduleIndex + " ...");
+
+        BindRouteProviderClassModel routeProviderClassModel = $BindRouteFilter.filter(roundEnv, mElements);
+        routeProviderClassModel.setModuleName(moduleIndex);
+
+        if (moduleIndex.equals("0")) {
+            // Route Impl Class Can Only Create Once
+            $ProcessorLog.log("Creating Class " + BindRouteImplClassModel.ROUTE_IMPL.getSelfClassName());
             try {
                 // __RouterIntf Impl Class
                 JavaFileObject codeFile = mFiler.createSourceFile(BindRouteImplClassModel.ROUTE_IMPL.getSelfClassName(), typeElement);
@@ -105,32 +112,21 @@ public class __AnnotationProcessor extends AbstractProcessor {
                 writer.close();
 
             } catch (IOException e) {
-                e.printStackTrace();
+                $ProcessorLog.log("Create Class " + BindRouteImplClassModel.ROUTE_IMPL.getSelfClassName() + " Error!");
             }
         }
 
-        // provider
-        String moduleIndex = $$RouteProviderModulePool.get().getTemplateModuleName(mFiler, typeElement);
-        mPrinter.printMessage(Diagnostic.Kind.NOTE, "Processing ModuleIndex " + moduleIndex);
+        try {
+            // __RouteProvider Impl Class
+            JavaFileObject codeFile = mFiler.createSourceFile(routeProviderClassModel.getSelfClassName(), typeElement);
 
-        BindRouteProviderClassModel routeProviderClassModel = $BindRouteFilter.filter(roundEnv, mElements);
-        routeProviderClassModel.setModuleName(moduleIndex);
+            Writer writer = codeFile.openWriter();
+            writer.append(routeProviderClassModel.toClassCode());
+            writer.flush();
+            writer.close();
 
-        if (typeElement != null) {
-
-            try {
-                // __RouteProvider Impl Class
-                JavaFileObject codeFile = mFiler.createSourceFile(routeProviderClassModel.getSelfClassName(), typeElement);
-                mPrinter.printMessage(Diagnostic.Kind.NOTE, "Processing Class " + routeProviderClassModel.getSelfClassName());
-
-                Writer writer = codeFile.openWriter();
-                writer.append(routeProviderClassModel.toClassCode());
-                writer.flush();
-                writer.close();
-
-            } catch (IOException e) {
-                mPrinter.printMessage(Diagnostic.Kind.NOTE, "Building Provider ModuleIndex " + moduleIndex + " Class Error");
-            }
+        } catch (IOException e) {
+            $ProcessorLog.log("Create RouteProvider With ModuleIndex " + moduleIndex + " Error!");
         }
         return false;
     }
@@ -153,6 +149,9 @@ public class __AnnotationProcessor extends AbstractProcessor {
 
                 add(OnLongClick.class.getCanonicalName());
                 add(OnLongClick2.class.getCanonicalName());
+
+                add(BindRoute.class.getCanonicalName());
+                add(BindExtra.class.getCanonicalName());
             }
         };
     }

@@ -1,21 +1,14 @@
 package com.ttyy.commonanno.util;
 
 import com.ttyy.commonanno.__Symbols;
-import com.ttyy.commonanno.model.route.BindRouteImplClassModel;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import javax.annotation.processing.Filer;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
-import javax.tools.FileObject;
-import javax.tools.JavaFileManager;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardLocation;
 
 /**
  * Author: hjq
@@ -26,7 +19,12 @@ import javax.tools.StandardLocation;
  */
 public class $$RouteProviderModulePool {
 
+    LinkedList<String> moduleRouterPackageAbsolutePaths;
+
+    String currentModulePath;
+
     private $$RouteProviderModulePool() {
+        moduleRouterPackageAbsolutePaths = new LinkedList<>();
     }
 
     public static class Holder {
@@ -37,52 +35,88 @@ public class $$RouteProviderModulePool {
         return Holder.INSTANCE;
     }
 
+    public void findCurrentProjectModules(TypeElement te) {
+
+        String currentPackageTotalPath = getClass().getResource("").getPath();
+        Pattern pathPattern = Pattern.compile("file:(.+)/build/(.+)");
+        Matcher matcher = pathPattern.matcher(currentPackageTotalPath);
+        matcher.matches();
+        String currentProject = matcher.group(1);
+
+        String hostProjectPath = new File(currentProject).getParent();
+
+        File projDir = new File(hostProjectPath);
+
+        // Android Studio Project File Struct
+        String currentLocationTag = "/src/main/java/" + te.getQualifiedName().toString().replaceAll("\\.", "/") + ".java";
+
+        for (File tmp : projDir.listFiles()) {
+
+            if (tmp.isFile()
+                    || tmp.getName().equals(".gradle")
+                    || tmp.getName().equals(".idea")
+                    || tmp.getName().equals("gradle")
+                    || tmp.getName().equals("build")) {
+                continue;
+            }
+
+            String modulePath = tmp.getPath();
+
+            String moduleRouterPackagePath = modulePath + "/build/intermediates/classes/debug/";
+            if(new File(moduleRouterPackagePath).exists()){
+                $ProcessorLog.log("Find Module Project: " + moduleRouterPackagePath);
+            }else {
+                moduleRouterPackagePath = modulePath + "/build/intermediates/classes/release/";
+                if(new File(moduleRouterPackagePath).exists()){
+                    $ProcessorLog.log("Find Module Project: " + moduleRouterPackagePath);
+                }
+            }
+
+            String locationTagTotalPath = modulePath + currentLocationTag;
+            if (currentModulePath == null
+                    && new File(locationTagTotalPath).exists()) {
+                currentModulePath = moduleRouterPackagePath;
+                $ProcessorLog.log("Current Module Project Path: " + currentModulePath);
+            }else {
+                moduleRouterPackageAbsolutePaths.add(moduleRouterPackagePath);
+            }
+        }
+
+    }
+
     /**
      * 预先准备20个moduleName
      *
      * @return
      */
-    public String getTemplateModuleName(Filer mFiler, TypeElement te) {
+    public String getTemplateModuleName() {
 
-        String moduleIndex = "100";
+        String moduleIndex = System.currentTimeMillis()+"";
         for (int i = 0; i < 20; i++) {
 
-            Class cls = null;
             String clspath = __Symbols.ROUTE_PACKAGE + ".$RouteProvider$$" + i;
-            try {
-                cls = Class.forName(clspath);
-            } catch (ClassNotFoundException e) {
+            clspath = clspath.replaceAll("\\.", "/")+".class";
 
-            }
-
-            if (cls == null) {
+            String selfAbsClsPath = currentModulePath + clspath;
+            if(new File(selfAbsClsPath).exists()){
                 moduleIndex = i + "";
                 break;
-            } else {
-
-                if (cls == null
-                        || cls.getResource("") == null)
-                    continue;
-
-                String clsFilePath = cls.getResource("").getPath() + "$RouteProvider$$" + i+".class";
-                File clsFile = new File(clsFilePath);
-                if(!clsFile.exists()){
-                    // not in this project ignore this logic
-                    continue;
-                }
-                long lastModified = clsFile.lastModified();
-                long currentMillions = System.currentTimeMillis();
-
-
-                if (currentMillions - lastModified >= 5 * 1000) {
-                    System.out.println("Diff Time >= 5s Override Provider Index " + i);
-                    moduleIndex = i + "";
-                    break;
-                } else {
-                    System.out.println("Diff Time < 5s So I Think It's Processing ");
-                }
-
             }
+
+            boolean isExistInOtherDir = false;
+            for(String dir : moduleRouterPackageAbsolutePaths){
+                String abspath = dir+clspath;
+                if(new File(abspath).exists()){
+                    isExistInOtherDir = true;
+                    break;
+                }
+            }
+
+            if(!isExistInOtherDir){
+                moduleIndex = i+"";
+                break;
+            }
+
         }
 
         return moduleIndex;
@@ -94,14 +128,6 @@ public class $$RouteProviderModulePool {
             list.add(__Symbols.ROUTE_PACKAGE + ".$RouteProvider$$" + i);
         }
         return list;
-    }
-
-    public static class TemplateModuleInfo {
-
-        public String moduleIndex;
-
-        public JavaFileObject codeFile;
-
     }
 
 }

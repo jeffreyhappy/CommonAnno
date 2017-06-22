@@ -1,6 +1,6 @@
 package com.ttyy.commonanno.util;
 
-import com.ttyy.commonanno.__RouteProviderIntf;
+import com.ttyy.commonanno.__RouteLoader;
 
 import java.util.HashMap;
 
@@ -22,7 +22,7 @@ public class $$RouteProvider {
         for(String path : $$RouteProviderModulePool.get().getModuleNamePool()){
 
             try {
-                __RouteProviderIntf provider = (__RouteProviderIntf) Class.forName(path).newInstance();
+                __RouteLoader provider = (__RouteLoader) Class.forName(path).newInstance();
 
                 provider.loadInto(routeMaps);
 
@@ -58,6 +58,7 @@ public class $$RouteProvider {
     }
 
     public Class getMappedRouteClass(String uri) {
+
         return routeMaps.get(uri);
     }
 

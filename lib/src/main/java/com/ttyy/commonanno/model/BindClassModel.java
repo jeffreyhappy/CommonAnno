@@ -10,6 +10,7 @@ import com.ttyy.commonanno.model.event.BindLongClickModel;
 import com.ttyy.commonanno.model.route.BindExtraModel;
 import com.ttyy.commonanno.util.$RClassCodeUtil;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.lang.model.element.TypeElement;
@@ -157,6 +158,96 @@ public class BindClassModel {
                 .append("<T>")
                 .append(__Symbols.CODE_START);
 
+
+        // declare local fields
+        sb.append("private int $$JinContentViewId = -1;\n");
+        ArrayList<String> mExistIdNames = new ArrayList<>();
+        for (BindViewModel tmp : views) {
+            sb.append("private int ")
+                    .append(tmp.getResourceIdName())
+                    .append(__Symbols.MATH_EQUAL);
+            sb.append(tmp.getResourceId())
+                    .append(";\n");
+            // Conflict Filed Names
+            mExistIdNames.add(tmp.getResourceIdName());
+        }
+
+        for (BindLayoutModel tmp : layouts) {
+            sb.append("private int ")
+                    .append(tmp.getResourceIdName())
+                    .append(__Symbols.MATH_EQUAL);
+            sb.append(tmp.getResourceId())
+                    .append(";\n");
+        }
+
+        // Click Ids
+        for (BindClickModel tmp : onClicks) {
+            if (tmp.getOnClickResourceIdNames() != null
+                    && tmp.getOnClickResourceIdNames().length > 0) {
+
+                for (String name : tmp.getOnClickResourceIdNames()) {
+                    if (mExistIdNames.contains(name)) {
+                        // Conflict Filed Names
+                        continue;
+                    }
+
+                    sb.append("private int ")
+                            .append(name)
+                            .append(__Symbols.MATH_EQUAL)
+                            .append("-1;\n");
+
+                    // Conflict Filed Names
+                    mExistIdNames.add(name);
+                }
+            }
+        }
+
+        // LongClick Ids
+        for (BindLongClickModel tmp : onLongClicks) {
+            if (tmp.getLongClickResourceIdNames() != null
+                    && tmp.getLongClickResourceIdNames().length > 0) {
+
+                for (String name : tmp.getLongClickResourceIdNames()) {
+                    if (mExistIdNames.contains(name)) {
+                        // Conflict Filed Names
+                        continue;
+                    }
+
+                    sb.append("private int ")
+                            .append(name)
+                            .append(__Symbols.MATH_EQUAL)
+                            .append("-1;\n");
+
+                    // Conflict Filed Names
+                    mExistIdNames.add(name);
+                }
+            }
+        }
+
+        // ItemClicks Ids
+        for (BindItemClickModel tmp : onItemClicks) {
+            if (tmp.getItemClickResourceIdNames() != null
+                    && tmp.getItemClickResourceIdNames().length > 0) {
+
+                for (String name : tmp.getItemClickResourceIdNames()) {
+                    if (mExistIdNames.contains(name)) {
+                        // Conflict Filed Names
+                        continue;
+                    }
+
+                    sb.append("private int ")
+                            .append(name)
+                            .append(__Symbols.MATH_EQUAL)
+                            .append("-1;\n");
+
+                    // Conflict Filed Names
+                    mExistIdNames.add(name);
+                }
+            }
+        }
+        mExistIdNames.clear();
+
+
         // public void inject(Finder finder, Class<?> RClass, Object source, Object target){
         //  xxxx;
         //  xxxxxx;
@@ -187,7 +278,9 @@ public class BindClassModel {
         // final Initialize field variables
         sb.append("try{\n");
         if (contentView != null) {
-            sb.append("final int $$JinContentViewId = ");
+            sb.append("if( $$JinContentViewId==-1 ){\n");
+
+            sb.append(" $$JinContentViewId = ");
             if (contentView.getResourceId() == -1) {
                 sb.append("(int)")
                         .append(__Symbols.OBJ_RCLASS_LAYOUT)
@@ -202,11 +295,15 @@ public class BindClassModel {
                 sb.append(contentView.getResourceId())
                         .append(";\n");
             }
+
+            sb.append("\n}\n");
         }
 
+        // id 变量初始化
         for (BindViewModel tmp : views) {
-            sb.append("final int ")
-                    .append(tmp.getResourceIdName())
+            sb.append("if(").append(tmp.getResourceIdName()).append("==-1){\n");
+
+            sb.append(tmp.getResourceIdName())
                     .append(__Symbols.MATH_EQUAL);
             if (tmp.getResourceId() == -1) {
                 sb.append("(int)")
@@ -221,11 +318,17 @@ public class BindClassModel {
                 sb.append(tmp.getResourceId())
                         .append(";\n");
             }
+
+            sb.append("\n}\n");
+
+            // Conflict Filed Names
+            mExistIdNames.add(tmp.getResourceIdName());
         }
 
         for (BindLayoutModel tmp : layouts) {
-            sb.append("final int ")
-                    .append(tmp.getResourceIdName())
+            sb.append("if(").append(tmp.getResourceIdName()).append("==-1){\n");
+
+            sb.append(tmp.getResourceIdName())
                     .append(__Symbols.MATH_EQUAL);
             if (tmp.getResourceId() == -1) {
                 sb.append("(int)")
@@ -240,7 +343,107 @@ public class BindClassModel {
                 sb.append(tmp.getResourceId())
                         .append(";\n");
             }
+
+            sb.append("\n}\n");
         }
+
+        // Click Ids
+        for (BindClickModel tmp : onClicks) {
+            if (tmp.getOnClickResourceIdNames() != null
+                    && tmp.getOnClickResourceIdNames().length > 0) {
+
+                for (String name : tmp.getOnClickResourceIdNames()) {
+                    if (mExistIdNames.contains(name)) {
+                        // Conflict Filed Names
+                        continue;
+                    }
+
+                    sb.append("if(").append(name).append("==-1){\n");
+
+                    sb.append(name).append(__Symbols.MATH_EQUAL);
+                    sb.append("(int)")
+                            .append(__Symbols.OBJ_RCLASS_ID)
+                            .append(".getField(")
+                            .append("\"").append(name).append("\"")
+                            .append(")")
+                            .append(".get(")
+                            .append(__Symbols.OBJ_RCLASS_ID)
+                            .append(");\n");
+
+                    sb.append("\n}\n");
+
+                    // Conflict Filed Names
+                    mExistIdNames.add(name);
+                }
+            }
+        }
+
+        // LongClick Ids
+        for (BindLongClickModel tmp : onLongClicks) {
+            if (tmp.getLongClickResourceIdNames() != null
+                    && tmp.getLongClickResourceIdNames().length > 0) {
+
+                for (String name : tmp.getLongClickResourceIdNames()) {
+                    if (mExistIdNames.contains(name)) {
+                        // Conflict Filed Names
+                        continue;
+                    }
+
+                    sb.append("if(").append(name).append("==-1){\n");
+
+                    sb.append(name).append(__Symbols.MATH_EQUAL);
+                    sb.append("(int)")
+                            .append(__Symbols.OBJ_RCLASS_ID)
+                            .append(".getField(")
+                            .append("\"").append(name).append("\"")
+                            .append(")")
+                            .append(".get(")
+                            .append(__Symbols.OBJ_RCLASS_ID)
+                            .append(");\n");
+
+                    sb.append("\n}\n");
+
+                    // Conflict Filed Names
+                    mExistIdNames.add(name);
+                }
+            }
+        }
+
+        // ItemClicks Ids
+        for (BindItemClickModel tmp : onItemClicks) {
+            if (tmp.getItemClickResourceIdNames() != null
+                    && tmp.getItemClickResourceIdNames().length > 0) {
+
+                for (String name : tmp.getItemClickResourceIdNames()) {
+                    if (mExistIdNames.contains(name)) {
+                        // Conflict Filed Names
+                        continue;
+                    }
+
+                    sb.append("if(").append(name).append("==-1){\n");
+
+                    sb.append(name).append(__Symbols.MATH_EQUAL);
+                    sb.append("(int)")
+                            .append(__Symbols.OBJ_RCLASS_ID)
+                            .append(".getField(")
+                            .append("\"").append(name).append("\"")
+                            .append(")")
+                            .append(".get(")
+                            .append(__Symbols.OBJ_RCLASS_ID)
+                            .append(");\n");
+
+                    sb.append("\n}\n");
+
+                    // Conflict Filed Names
+                    mExistIdNames.add(name);
+                }
+            }
+        }
+
+
+        // Declare Field End Not Need It
+        mExistIdNames.clear();
+        mExistIdNames = null;
 
         // setContentView findView inflateLayout
         sb.append("if(type == Finder.Activity){\n");
@@ -286,6 +489,12 @@ public class BindClassModel {
         }
         sb.append("\n}\n");
 
+
+        // get intent data from annotation param key
+        for(BindExtraModel extra : extras){
+
+        }
+
         // onClick事件
         // View.OnClickListener onClickListener = new View.OnClickListener() {
         //     @Override
@@ -296,7 +505,6 @@ public class BindClassModel {
         sb.append("View.OnClickListener onClickListener = new View.OnClickListener() {\n")
                 .append("@Override\n")
                 .append("public void onClick(View v) {\n");
-        sb.append("switch (v.getId()){\n");
 
         LinkedList<BindEventMethodModel.Parameter> onClickParameters = new LinkedList<>();
         BindEventMethodModel.Parameter onClickParam0 = new BindEventMethodModel.Parameter();
@@ -304,23 +512,41 @@ public class BindClassModel {
         onClickParam0.strParameterName = "v";
         onClickParameters.add(onClickParam0);
 
+        boolean ifCodeStart = true;
         for (BindClickModel tmp : onClicks) {
             if (tmp.getOnClickResourceIds() != null) {
                 for (int id : tmp.getOnClickResourceIds()) {
-                    sb.append("case ").append(id).append(":\n");
-                    sb.append(tmp.getActionMethod().toUse(onClickParameters));
-                    sb.append("break;");
+
+                    if (ifCodeStart) {
+                        ifCodeStart = false;
+                        sb.append("if (v.getId() == ").append(id).append("){\n");
+                        sb.append(tmp.getActionMethod().toUse(onClickParameters));
+                        sb.append("\n}");
+                    } else {
+                        sb.append("else if (v.getId() == ").append(id).append("){\n");
+                        sb.append(tmp.getActionMethod().toUse(onClickParameters));
+                        sb.append("\n}");
+                    }
                 }
             } else if (tmp.getOnClickResourceIdNames() != null) {
                 for (String idName : tmp.getOnClickResourceIdNames()) {
-                    sb.append("case ").append(idName).append(":\n");
-                    sb.append(tmp.getActionMethod().toUse(onClickParameters));
-                    sb.append("break;");
+
+                    if (ifCodeStart) {
+                        ifCodeStart = false;
+                        sb.append("if (v.getId() == ").append(idName).append("){\n");
+                        sb.append(tmp.getActionMethod().toUse(onClickParameters));
+                        sb.append("\n}");
+                    } else {
+                        sb.append("else if (v.getId() == ").append(idName).append("){\n");
+                        sb.append(tmp.getActionMethod().toUse(onClickParameters));
+                        sb.append("\n}");
+                    }
+
                 }
             }
         }
 
-        sb.append("\n}\n");
+        sb.append("\n");
         sb.append("\n}\n};\n");
 
         // setOnClickListener
@@ -378,7 +604,6 @@ public class BindClassModel {
         sb.append("View.OnLongClickListener onLongClickListener = new View.OnLongClickListener(){\n")
                 .append("@Override\n")
                 .append("public boolean onLongClick(View v) {\n");
-        sb.append("switch (v.getId()){\n");
 
         LinkedList<BindEventMethodModel.Parameter> onLongClickParameters = new LinkedList<>();
         BindEventMethodModel.Parameter onLongClickParam0 = new BindEventMethodModel.Parameter();
@@ -386,23 +611,38 @@ public class BindClassModel {
         onLongClickParam0.strParameterName = "v";
         onLongClickParameters.add(onLongClickParam0);
 
+        ifCodeStart = true;
         for (BindLongClickModel tmp : onLongClicks) {
             if (tmp.getLongClickResourceIds() != null) {
                 for (int id : tmp.getLongClickResourceIds()) {
-                    sb.append("case ").append(id).append(":\n");
-                    sb.append(tmp.getActionMethod().toUse(onLongClickParameters));
-                    sb.append("break;");
+                    if (ifCodeStart) {
+                        ifCodeStart = false;
+                        sb.append("if (v.getId() == ").append(id).append("){\n");
+                        sb.append(tmp.getActionMethod().toUse(onLongClickParameters));
+                        sb.append("\n}");
+                    } else {
+                        sb.append("else if (v.getId() == ").append(id).append("){\n");
+                        sb.append(tmp.getActionMethod().toUse(onLongClickParameters));
+                        sb.append("\n}");
+                    }
                 }
             } else if (tmp.getLongClickResourceIdNames() != null) {
                 for (String idName : tmp.getLongClickResourceIdNames()) {
-                    sb.append("case ").append(idName).append(":\n");
-                    sb.append(tmp.getActionMethod().toUse(onClickParameters));
-                    sb.append("break;");
+                    if (ifCodeStart) {
+                        ifCodeStart = false;
+                        sb.append("if (v.getId() == ").append(idName).append("){\n");
+                        sb.append(tmp.getActionMethod().toUse(onLongClickParameters));
+                        sb.append("\n}");
+                    } else {
+                        sb.append("else if (v.getId() == ").append(idName).append("){\n");
+                        sb.append(tmp.getActionMethod().toUse(onLongClickParameters));
+                        sb.append("\n}");
+                    }
                 }
             }
         }
 
-        sb.append("\n}\n");
+        sb.append("\n");
         sb.append("return true;\n}\n};");
 
         // setOnLongClickListener

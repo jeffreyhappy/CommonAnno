@@ -3,6 +3,7 @@ package com.ttyy.commonanno.filter;
 import com.ttyy.commonanno.anno.route.BindRoute;
 import com.ttyy.commonanno.model.route.BindRouteProviderClassModel;
 import com.ttyy.commonanno.model.route.BindRouteTupple;
+import com.ttyy.commonanno.util.$ProcessorLog;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
@@ -34,6 +35,7 @@ public class $BindRouteFilter {
             routeTupple.uri = bindRoute.value();
             routeTupple.className = te.getQualifiedName().toString();
 
+            $ProcessorLog.log("uri "+routeTupple.uri+" cls "+routeTupple.className);
             model.addRouteTupple(routeTupple);
         }
 

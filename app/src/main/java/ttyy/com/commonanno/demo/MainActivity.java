@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.ttyy.commonanno.JinInjector;
 import com.ttyy.commonanno.anno.BindLayout;
@@ -19,15 +18,6 @@ import com.ttyy.commonanno.anno.route.BindRoute;
 @BindRoute("jin.test.ui.main")
 @BindLayout(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
-
-    @BindView(R.id.tv_hello)
-    TextView tv_hello;
-
-    @BindView(R.id.tv_lib_jump)
-    TextView tv_jump;
-
-    @BindView(R.id.tv_app_jump)
-    TextView tv_app_jump;
 
     @BindView(R.id.lv_1)
     ListView lv_1;
@@ -51,15 +41,22 @@ public class MainActivity extends AppCompatActivity {
                 .navigate(this);
     }
 
-    @OnClick(R.id.tv_lib_jump)
-    void jumpOnClickLibJump(){
-        JinInjector.get().buildRouter("jin.test.libmain")
+    @OnClick(R.id.tv_lib_a_jump)
+    void jumpOnClickLibAJump(){
+        JinInjector.get().buildRouter("jin.test.lib_a_main")
                 .navigate(this);
     }
 
-    @OnLongClick(R.id.tv_lib_jump)
-    void logOnClickJump(){
-        Log.e("Test", "onLongClickJump!");
+    @OnClick(R.id.tv_lib_b_jump)
+    void jumpOnClickLibBJump(){
+        JinInjector.get().buildRouter("jin.test.lib_b_main")
+                .navigate(this);
+    }
+
+    @OnClick(R.id.tv_lib_c_jump)
+    void jumpOnClickLibCJump(){
+        JinInjector.get().buildRouter("jin.test.lib_c_main")
+                .navigate(this);
     }
 
     @OnClick(R.id.tv_hello)

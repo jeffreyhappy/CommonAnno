@@ -5,10 +5,10 @@
     android:background="#fff">
 
     <TextView
-        android:id="@+id/tv_second"
+        android:id="@+id/tv_b_jump"
         android:layout_width="240dp"
         android:layout_height="100dp"
-        android:text="Second_App_Activity"
+        android:text="LibMain_B_Activity"
         android:layout_gravity="center"
         android:gravity="center"
         android:textSize="22sp"

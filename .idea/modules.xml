@@ -5,6 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/CommonAnno.iml" filepath="$PROJECT_DIR$/CommonAnno.iml" />
       <module fileurl="file://$PROJECT_DIR$/a_module/a_module.iml" filepath="$PROJECT_DIR$/a_module/a_module.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/b_module/b_module.iml" filepath="$PROJECT_DIR$/b_module/b_module.iml" />
+      <module fileurl="file://$PROJECT_DIR$/c_module/c_module.iml" filepath="$PROJECT_DIR$/c_module/c_module.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
     </modules>
   </component>

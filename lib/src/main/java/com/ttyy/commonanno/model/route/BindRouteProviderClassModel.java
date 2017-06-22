@@ -1,8 +1,7 @@
 package com.ttyy.commonanno.model.route;
 
-import com.ttyy.commonanno.__RouteProviderIntf;
+import com.ttyy.commonanno.__RouteLoader;
 import com.ttyy.commonanno.__Symbols;
-import com.ttyy.commonanno.anno.route.BindRoute;
 
 import java.util.LinkedList;
 
@@ -59,7 +58,7 @@ public class BindRouteProviderClassModel {
                 .append(__Symbols.TYPE_CLASS)
                 .append(getSelfSimpleClassName())
                 .append(__Symbols.ACTION_IMPL)
-                .append(__RouteProviderIntf.class.getCanonicalName())
+                .append(__RouteLoader.class.getCanonicalName())
                 .append(__Symbols.CODE_START);
 
         // loadInto method start

@@ -19,7 +19,9 @@
 
         <activity android:name=".SecondActivity"/>
 
-        <activity android:name="huaiye.mylibrary.LibMainActivity"/>
+        <activity android:name="jin.test.a_module.LibAMainActivity"/>
+        <activity android:name="jin.test.b_module.LibBMainActivity"/>
+        <activity android:name="jin.test.c_module.LibCMainActivity"/>
 
     </application>
 

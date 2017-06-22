@@ -30,10 +30,32 @@
         android:layout_gravity="center_horizontal"/>
 
     <TextView
-        android:id="@+id/tv_lib_jump"
+        android:id="@+id/tv_lib_a_jump"
         android:layout_width="220dp"
         android:layout_height="50dp"
-        android:text="Hello Library Module!"
+        android:text="Hello Library A Module!"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:background="#ff00ff"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:id="@+id/tv_lib_b_jump"
+        android:layout_width="220dp"
+        android:layout_height="50dp"
+        android:text="Hello Library B Module!"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:background="#ff00ff"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:id="@+id/tv_lib_c_jump"
+        android:layout_width="220dp"
+        android:layout_height="50dp"
+        android:text="Hello Library C Module!"
         android:textSize="18sp"
         android:gravity="center"
         android:background="#ff00ff"
