@@ -38,9 +38,9 @@ public class $RouteUriUtil {
 
                 clsUri = uri.split("\\?")[0];
 
-
                 // a=1&b=2&c=abc
                 String params = matcher.group(1);
+
                 for (String param : params.split("&")) {
                     String[] values = param.split("=");
                     String key = values[0].trim();
@@ -85,5 +85,5 @@ public class $RouteUriUtil {
 
     static Pattern FLOAT_P = Pattern.compile("[-0-9]+\\.[0-9]+f");
 
-    static Pattern FLOAT_D = Pattern.compile("[-0-9]+\\.[0-9]+");
+    static Pattern FLOAT_D = Pattern.compile("[-0-9]+\\.[0-9]+d");
 }
