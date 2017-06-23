@@ -12,4 +12,5 @@ public interface __BindInjectIntf<T> {
 
     void inject(Finder type, Class<?> RClass, Object source, T target);
 
+    void injectExtras(Object source, T target);
 }
