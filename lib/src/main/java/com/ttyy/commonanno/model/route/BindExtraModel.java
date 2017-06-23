@@ -33,4 +33,16 @@ public class BindExtraModel {
         return this;
     }
 
+    public String getExtraKey(){
+        return this.strExtraKey;
+    }
+
+    public String getFieldName(){
+        return this.strFieldName;
+    }
+
+    public String getFieldType(){
+        return this.strFieldType;
+    }
+
 }
