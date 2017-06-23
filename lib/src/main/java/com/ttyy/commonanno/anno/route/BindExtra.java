@@ -16,6 +16,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface BindExtra {
 
-    String value();
+    String value() default "";
 
 }
