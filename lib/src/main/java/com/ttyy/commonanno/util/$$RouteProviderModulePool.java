@@ -144,7 +144,9 @@ public class $$RouteProviderModulePool {
     private void filterDirs(File file, ArrayList<String> paths){
         for(File tmp : file.listFiles()){
             if(tmp.isDirectory()){
-                paths.add(tmp.getPath().substring(currentModuleJavaPath.length()).replaceAll("\\\\", "."));
+                // Windows Is xx\xx\xx MacOs Is xx/xx/xx
+                // Translate To xx.xx.xx
+                paths.add(tmp.getPath().substring(currentModuleJavaPath.length()).replaceAll("[\\\\|/]", "."));
                 filterDirs(tmp, paths);
             }
         }

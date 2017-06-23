@@ -1,4 +1,4 @@
-package ttyy.com.commonanno.demo;
+package ttyy.com.commonanno.demo.home;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +14,9 @@ import com.ttyy.commonanno.anno.OnClick;
 import com.ttyy.commonanno.anno.OnItemClick;
 import com.ttyy.commonanno.anno.OnLongClick;
 import com.ttyy.commonanno.anno.route.BindRoute;
+
+import ttyy.com.commonanno.demo.DemoAdapter;
+import ttyy.com.commonanno.demo.R;
 
 @BindRoute("jin.test.ui.main")
 @BindLayout(R.layout.activity_main)

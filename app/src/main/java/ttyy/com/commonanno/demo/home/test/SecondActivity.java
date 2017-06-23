@@ -1,4 +1,4 @@
-package ttyy.com.commonanno.demo.test;
+package ttyy.com.commonanno.demo.home.test;
 
 import android.app.Activity;
 import android.os.Bundle;
