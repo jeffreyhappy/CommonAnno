@@ -10,6 +10,7 @@ import com.ttyy.commonanno.anno.OnItemClick;
 import com.ttyy.commonanno.anno.OnItemClick2;
 import com.ttyy.commonanno.anno.OnLongClick;
 import com.ttyy.commonanno.anno.OnLongClick2;
+import com.ttyy.commonanno.anno.route.BindExtra;
 import com.ttyy.commonanno.model.BindClassModel;
 import com.ttyy.commonanno.model.BindLayoutModel;
 import com.ttyy.commonanno.model.BindViewModel;
@@ -17,6 +18,7 @@ import com.ttyy.commonanno.model.event.BindClickModel;
 import com.ttyy.commonanno.model.event.BindEventMethodModel;
 import com.ttyy.commonanno.model.event.BindItemClickModel;
 import com.ttyy.commonanno.model.event.BindLongClickModel;
+import com.ttyy.commonanno.model.route.BindExtraModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -136,8 +138,10 @@ public class $BindClassFilter {
 
             if(injectMemberView(e, code)){
 
+            }else if(injectMemberEvent(e, code)){
+
             }else {
-                injectMemberEvent(e, code);
+                injectMemberExtra(e, code);
             }
 
         }
@@ -184,6 +188,30 @@ public class $BindClassFilter {
             return false;
         }
         return true;
+    }
+
+    static final boolean injectMemberExtra(Element e, BindClassModel code){
+        if(e.getAnnotation(BindExtra.class) != null){
+
+            BindExtra bindExtra = e.getAnnotation(BindExtra.class);
+
+            BindExtraModel extra = new BindExtraModel();
+            extra.setFieldName(e.getSimpleName().toString())
+                    .setFieldType(e.asType().toString());
+
+            if(bindExtra.value() == null
+                    || bindExtra.value().trim().equals("")){
+                extra.setExtraKey(e.getSimpleName().toString());
+            }else {
+                extra.setExtraKey(bindExtra.value());
+            }
+
+            code.addExtra(extra);
+
+            return true;
+        }
+
+        return false;
     }
 
     static final boolean injectMemberEvent(Element e, BindClassModel code){
