@@ -3,6 +3,7 @@ package com.ttyy.commonanno.util;
 import com.ttyy.commonanno.__Symbols;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -21,7 +22,9 @@ public class $$RouteProviderModulePool {
 
     LinkedList<String> moduleRouterPackageAbsolutePaths;
 
-    String currentModulePath;
+    String currentModuleBuildPath;
+
+    String currentModuleJavaPath;
 
     private $$RouteProviderModulePool() {
         moduleRouterPackageAbsolutePaths = new LinkedList<>();
@@ -73,10 +76,11 @@ public class $$RouteProviderModulePool {
             }
 
             String locationTagTotalPath = modulePath + currentLocationTag;
-            if (currentModulePath == null
+            if (currentModuleBuildPath == null
                     && new File(locationTagTotalPath).exists()) {
-                currentModulePath = moduleRouterPackagePath;
-                $ProcessorLog.log("Current Module Project Path: " + currentModulePath);
+                currentModuleBuildPath = moduleRouterPackagePath;
+                currentModuleJavaPath = modulePath + "/src/main/java/";
+                $ProcessorLog.log("Current Module Project Path: " + currentModuleBuildPath);
             }else {
                 moduleRouterPackageAbsolutePaths.add(moduleRouterPackagePath);
             }
@@ -97,7 +101,7 @@ public class $$RouteProviderModulePool {
             String clspath = __Symbols.ROUTE_PACKAGE + ".$RouteProvider$$" + i;
             clspath = clspath.replaceAll("\\.", "/")+".class";
 
-            String selfAbsClsPath = currentModulePath + clspath;
+            String selfAbsClsPath = currentModuleBuildPath + clspath;
             if(new File(selfAbsClsPath).exists()){
                 moduleIndex = i + "";
                 break;
@@ -128,6 +132,22 @@ public class $$RouteProviderModulePool {
             list.add(__Symbols.ROUTE_PACKAGE + ".$RouteProvider$$" + i);
         }
         return list;
+    }
+
+    public ArrayList<String> getModulePackages(){
+        File file = new File(currentModuleJavaPath);
+        ArrayList<String> paths = new ArrayList<>();
+        filterDirs(file, paths);
+        return paths;
+    }
+
+    private void filterDirs(File file, ArrayList<String> paths){
+        for(File tmp : file.listFiles()){
+            if(tmp.isDirectory()){
+                paths.add(tmp.getPath().substring(currentModuleJavaPath.length()).replaceAll("\\\\", "."));
+                filterDirs(tmp, paths);
+            }
+        }
     }
 
 }
