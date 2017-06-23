@@ -37,7 +37,11 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.tv_app_jump)
     void jumpOnClickAppJump(){
-        JinInjector.get().buildRouter("jin.test.ui.appsecond")
+        JinInjector.get().buildRouter("jin.test.ui.appsecond?a=1&b=1.1f&c=1.2d&d=str")
+                .putInt("a", 2)
+                .putFloat("b", 2.1f)
+                .putDouble("c", 2.2d)
+                .putString("d", "str2")
                 .navigate(this);
     }
 
