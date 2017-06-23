@@ -127,6 +127,11 @@ public class BindClassModel {
         return this;
     }
 
+    public BindClassModel addExtra(BindExtraModel model){
+        this.extras.add(model);
+        return this;
+    }
+
     public String toClassCode() {
         StringBuilder sb = new StringBuilder();
 
@@ -144,6 +149,7 @@ public class BindClassModel {
         sb.append("import android.view.ViewGroup;\n");
         sb.append("import android.view.LayoutInflater;\n");
         sb.append("import android.view.View;\n");
+        sb.append("import android.content.Intent;\n");
         sb.append("import android.widget.AdapterView;\n");
 
         // public class xx.xx.xxx.xxx$xxx$$JinClass implements __BindInjectIntf{
@@ -161,6 +167,7 @@ public class BindClassModel {
 
         // declare local fields
         sb.append("private int $$JinContentViewId = -1;\n");
+        // Conflict Field Names
         ArrayList<String> mExistIdNames = new ArrayList<>();
         for (BindViewModel tmp : views) {
             sb.append("private int ")
@@ -247,11 +254,20 @@ public class BindClassModel {
         }
         mExistIdNames.clear();
 
+        // add intf method injectview
+        addFunctionInjectViews(sb);
+        // add intf method injectextra
+        addFunctionInjectExtras(sb);
 
-        // public void inject(Finder finder, Class<?> RClass, Object source, Object target){
-        //  xxxx;
-        //  xxxxxx;
-        // }
+        // End Of Class
+        sb.append(__Symbols.CODE_END);
+        return sb.toString();
+    }
+
+    void addFunctionInjectViews(StringBuilder sb) {
+        // Function inject(Finder type, Class<?> RClass, Object source, T target) Start
+        // Conflict Field Names
+        ArrayList<String> mExistIdNames = new ArrayList<>();
         sb.append(__Symbols.AUTH_PUBLIC)
                 .append(__Symbols.RETURN_VOID)
                 .append("inject(Finder type, Class<?> RClass, Object source, final T target)")
@@ -299,7 +315,7 @@ public class BindClassModel {
             sb.append("\n}\n");
         }
 
-        // id 变量初始化
+        // Initialize Fields
         for (BindViewModel tmp : views) {
             sb.append("if(").append(tmp.getResourceIdName()).append("==-1){\n");
 
@@ -443,7 +459,6 @@ public class BindClassModel {
 
         // Declare Field End Not Need It
         mExistIdNames.clear();
-        mExistIdNames = null;
 
         // setContentView findView inflateLayout
         sb.append("if(type == Finder.Activity){\n");
@@ -488,12 +503,6 @@ public class BindClassModel {
             sb.append(Finder.View.inflateLayoutById(tmp.getResourceIdName()));
         }
         sb.append("\n}\n");
-
-
-        // get intent data from annotation param key
-        for(BindExtraModel extra : extras){
-
-        }
 
         // onClick事件
         // View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -788,11 +797,80 @@ public class BindClassModel {
             }
         }
 
-        // 方法结束
+        // Use Function injectExtras()
+        sb.append("injectExtras(source, target);\n");
+
+        // Function inject(Finder type, Class<?> RClass, Object source, T target) End
         sb.append("\n} catch (Exception e) {\n")
                 .append("e.printStackTrace();\n}\n}\n");
-
-        sb.append(__Symbols.CODE_END);
-        return sb.toString();
     }
+
+    void addFunctionInjectExtras(StringBuilder sb) {
+
+        // Function void injectExtras(Object source, T target) Start
+        sb.append("public void injectExtras(Object source, T target){\n");
+
+        // Inject Extras Only For Source InstanceOf Activity
+        sb.append("if(! (source instanceof Activity) ){\n");
+        sb.append("return;\n");
+        sb.append("\n}\n");
+
+        sb.append("Intent intent = ((Activity)source).getIntent();\n");
+
+        // get intent data from annotation param key
+        for (BindExtraModel extra : extras) {
+
+            if(extra.getFieldType().equals("int")
+                    || extra.getFieldType().equals("java.lang.Integer")){
+
+                sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
+                        .append("intent.getIntExtra(\"").append(extra.getExtraKey()).append("\", -1);\n");
+            }else if(extra.getFieldType().equals("float")
+                    || extra.getFieldType().equals("java.lang.Float")){
+
+                sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
+                        .append("intent.getFloatExtra(\"").append(extra.getExtraKey()).append("\", -1);\n");
+            }else if(extra.getFieldType().equals("double")
+                    || extra.getFieldType().equals("java.lang.Double")){
+
+                sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
+                        .append("intent.getDoubleExtra(\"").append(extra.getExtraKey()).append("\", -1);\n");
+            }else if(extra.getFieldType().equals("java.lang.String")){
+
+                sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
+                        .append("intent.getStringExtra(\"").append(extra.getExtraKey()).append("\");\n");
+            }else{
+                sb.append("if(");
+                sb.append("java.io.Serializable.class.isAssignableFrom(")
+                        .append(extra.getFieldType()).append(".class)");
+                sb.append("){\n");
+
+                sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
+                        .append("(").append(extra.getFieldType()).append(")")
+                        .append("intent.getSerializableExtra(\"").append(extra.getExtraKey()).append("\");\n");
+
+                sb.append("\n} else if(");
+                sb.append("android.os.Parcelable.class.isAssignableFrom(")
+                        .append(extra.getFieldType()).append(".class)");
+                sb.append("){\n");
+
+                sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
+                        .append("(").append(extra.getFieldType()).append(")")
+                        .append("intent.getParcelableExtra(\"").append(extra.getExtraKey()).append("\");\n");
+
+                sb.append("\n} else {\n");
+                sb.append("throw new UnsupportedOperationException(\" Not Support For Extra ")
+                        .append(extra.getFieldName())
+                        .append(" Type ")
+                        .append(extra.getFieldType())
+                        .append("\");\n");
+                sb.append("\n}\n");
+            }
+
+        }
+
+        // Function void injectExtras(Object source, T target) End
+        sb.append("\n}\n");
+    }
+
 }
