@@ -79,16 +79,17 @@ public class __AnnotationProcessor extends AbstractProcessor {
         }
 
         // About Route
-        if (typeElement == null) {
-            for (Element e : roundEnv.getElementsAnnotatedWith(BindRoute.class)) {
-                typeElement = (TypeElement) e;
-                break;
-            }
+        typeElement = null;
+        for (Element e : roundEnv.getElementsAnnotatedWith(BindRoute.class)) {
+            typeElement = (TypeElement) e;
+            break;
         }
 
         if (typeElement == null) {
             return false;
         } else {
+            // find total modules first
+            // to find all packages in current module
             $$RouteProviderModulePool.get().findCurrentProjectModules(typeElement);
         }
 

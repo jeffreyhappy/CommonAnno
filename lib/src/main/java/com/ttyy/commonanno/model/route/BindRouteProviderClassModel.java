@@ -79,4 +79,9 @@ public class BindRouteProviderClassModel {
     public static BindRouteProviderClassModel create(){
         return new BindRouteProviderClassModel();
     }
+
+    public boolean isRoutePathsEmpty(){
+        return mappedRoutes.size() == 0;
+    }
+
 }
