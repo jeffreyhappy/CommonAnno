@@ -15,6 +15,10 @@ android {
                 arguments = [ moduleName : project.getName() ]
             }
         }
+        
+        lintOptions {
+            disable "ResourceType"
+        }
     }
     buildTypes {
         release {
