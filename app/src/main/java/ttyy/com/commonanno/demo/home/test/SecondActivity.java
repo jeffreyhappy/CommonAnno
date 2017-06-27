@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.ttyy.commonanno.JinInjector;
+import com.ttyy.commonanno.Injectors;
 import com.ttyy.commonanno.anno.BindLayout2;
 import com.ttyy.commonanno.anno.BindView;
 import com.ttyy.commonanno.anno.route.BindExtra;
@@ -41,7 +41,7 @@ public class SecondActivity extends Activity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        JinInjector.get().setRClass(R.class).injectActivity(this);
+        Injectors.get().setRClass(R.class).injectActivity(this);
 
         tv_second.setText("Hello App Second Page");
 

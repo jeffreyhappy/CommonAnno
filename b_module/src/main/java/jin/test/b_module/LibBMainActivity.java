@@ -5,12 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.ttyy.commonanno.JinInjector;
+import com.ttyy.commonanno.Injectors;
 import com.ttyy.commonanno.anno.BindLayout2;
 import com.ttyy.commonanno.anno.BindView;
-import com.ttyy.commonanno.anno.OnClick;
 import com.ttyy.commonanno.anno.OnClick2;
 import com.ttyy.commonanno.anno.route.BindRoute;
 
@@ -32,13 +30,13 @@ public class LibBMainActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        JinInjector.get().setRClass(R.class).injectActivity(this);
+        Injectors.get().setRClass(R.class).injectActivity(this);
 
         Log.e("Test", "LibBMainActivity");
     }
 
     @OnClick2("tv_b_jump")
     void onJumpClick(){
-        JinInjector.get().buildRouter("jin.test.ui.main").navigate(this);
+        Injectors.get().buildRouter("jin.test.ui.main").navigate(this);
     }
 }

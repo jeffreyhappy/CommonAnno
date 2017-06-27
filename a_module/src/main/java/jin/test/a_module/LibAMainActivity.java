@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.ttyy.commonanno.JinInjector;
+import com.ttyy.commonanno.Injectors;
 import com.ttyy.commonanno.anno.BindLayout2;
 import com.ttyy.commonanno.anno.OnClick2;
 import com.ttyy.commonanno.anno.route.BindRoute;
@@ -27,7 +27,7 @@ public class LibAMainActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        JinInjector.get().setRClass(R.class).injectActivity(this);
+        Injectors.get().setRClass(R.class).injectActivity(this);
 
         Log.e("Test", "LibAMainActivity");
 
@@ -35,7 +35,7 @@ public class LibAMainActivity extends Activity {
 
     @OnClick2("tv_lib_a")
     void onClick(){
-        JinInjector.get().buildRouter("jin.test.lib_b_main").navigate(this);
+        Injectors.get().buildRouter("jin.test.lib_b_main").navigate(this);
     }
 
 }

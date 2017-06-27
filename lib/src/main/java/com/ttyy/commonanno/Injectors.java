@@ -1,6 +1,7 @@
 package com.ttyy.commonanno;
 
 import com.ttyy.commonanno.model.route.BindRouteImplClassModel;
+import com.ttyy.commonanno.util.$$RouteProvider;
 
 import java.util.HashMap;
 
@@ -9,29 +10,29 @@ import java.util.HashMap;
  * date: 2017/06/20
  * version: 0
  * mail: secret
- * desc: JinInjector
+ * desc: Injectors
  */
 
-public class JinInjector {
+public class Injectors {
 
     HashMap<String, __BindInjectIntf> intfs;
 
     Class<?> mTmpRClass;
 
-    private JinInjector() {
+    private Injectors() {
         intfs = new HashMap<>();
     }
 
     static class Holder {
-        static JinInjector INSTANCE = new JinInjector();
+        static Injectors INSTANCE = new Injectors();
     }
 
-    public static JinInjector get() {
+    public static Injectors get() {
         Holder.INSTANCE.mTmpRClass = null;
         return Holder.INSTANCE;
     }
 
-    public JinInjector setRClass(Class<?> cls) {
+    public Injectors setRClass(Class<?> cls) {
         mTmpRClass = cls;
         return this;
     }
@@ -79,6 +80,13 @@ public class JinInjector {
         }
 
         mTmpRClass = null;
+    }
+
+    /**
+     * 预先加载Route路由字典
+     */
+    public void loadRouteInfos(){
+        $$RouteProvider.get();
     }
 
     public __RouterIntf buildRouter(String url){

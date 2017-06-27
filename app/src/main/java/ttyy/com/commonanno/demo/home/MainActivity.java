@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.ttyy.commonanno.JinInjector;
+import com.ttyy.commonanno.Injectors;
 import com.ttyy.commonanno.anno.BindLayout;
 import com.ttyy.commonanno.anno.BindView;
 import com.ttyy.commonanno.anno.OnClick;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        JinInjector.get().injectActivity(this);
+        Injectors.get().injectActivity(this);
 
         lv_1.setAdapter(new DemoAdapter());
         lv_2.setAdapter(new DemoAdapter());
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.tv_app_jump)
     void jumpOnClickAppJump(){
-        JinInjector.get().buildRouter("jin.test.ui.appsecond?a=1&b=1.1f&c=1.2d&d=str")
+        Injectors.get().buildRouter("jin.test.ui.appsecond?a=1&b=1.1f&c=1.2d&d=str")
                 .putInt("a", 2)
                 .putFloat("b", 2.1f)
                 .putDouble("c", 2.2d)
@@ -50,19 +50,19 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.tv_lib_a_jump)
     void jumpOnClickLibAJump(){
-        JinInjector.get().buildRouter("jin.test.lib_a_main")
+        Injectors.get().buildRouter("jin.test.lib_a_main")
                 .navigate(this);
     }
 
     @OnClick(R.id.tv_lib_b_jump)
     void jumpOnClickLibBJump(){
-        JinInjector.get().buildRouter("jin.test.lib_b_main")
+        Injectors.get().buildRouter("jin.test.lib_b_main")
                 .navigate(this);
     }
 
     @OnClick(R.id.tv_lib_c_jump)
     void jumpOnClickLibCJump(){
-        JinInjector.get().buildRouter("jin.test.lib_c_main")
+        Injectors.get().buildRouter("jin.test.lib_c_main")
                 .navigate(this);
     }
 
