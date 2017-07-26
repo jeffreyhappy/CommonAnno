@@ -157,8 +157,6 @@ public class BindClassModel {
                 .append(__Symbols.TYPE_CLASS)
                 .append(getSelfClassSimpleName())
                 .append("<").append("T extends ").append(strParentClassName).append(">")
-                .append(__Symbols.ACTION_EXTEND)
-                .append(strParentClassName)
                 .append(__Symbols.ACTION_IMPL)
                 .append(__BindInjectIntf.class.getCanonicalName())
                 .append("<T>")
@@ -572,7 +570,7 @@ public class BindClassModel {
                 }
                 sb.append("\n} else if(type == Finder.View){\n");
                 for (int id : tmp.getOnClickResourceIds()) {
-                    sb.append("(((Activity)").append(__Symbols.OBJ_SOURCE).append(")")
+                    sb.append("(((View)").append(__Symbols.OBJ_SOURCE).append(")")
                             .append(".findViewById(")
                             .append(id)
                             .append(")).setOnClickListener(")
@@ -592,7 +590,7 @@ public class BindClassModel {
                 }
                 sb.append("\n} else if(type == Finder.View){\n");
                 for (String idName : tmp.getOnClickResourceIdNames()) {
-                    sb.append("(((Activity)").append(__Symbols.OBJ_SOURCE).append(")")
+                    sb.append("(((View)").append(__Symbols.OBJ_SOURCE).append(")")
                             .append(".findViewById(")
                             .append(idName)
                             .append(")).setOnClickListener(")
@@ -668,7 +666,7 @@ public class BindClassModel {
                 }
                 sb.append("\n} else if(type == Finder.View){\n");
                 for (int id : tmp.getOnClickResourceIds()) {
-                    sb.append("(((Activity)").append(__Symbols.OBJ_SOURCE).append(")")
+                    sb.append("(((View)").append(__Symbols.OBJ_SOURCE).append(")")
                             .append(".findViewById(")
                             .append(id)
                             .append(")).setOnLongClickListener(")
@@ -688,7 +686,7 @@ public class BindClassModel {
                 }
                 sb.append("\n} else if(type == Finder.View){\n");
                 for (String idName : tmp.getOnClickResourceIdNames()) {
-                    sb.append("(((Activity)").append(__Symbols.OBJ_SOURCE).append(")")
+                    sb.append("(((View)").append(__Symbols.OBJ_SOURCE).append(")")
                             .append(".findViewById(")
                             .append(idName)
                             .append(")).setOnLongClickListener(")
