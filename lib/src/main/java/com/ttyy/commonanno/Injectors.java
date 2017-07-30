@@ -85,8 +85,13 @@ public class Injectors {
     /**
      * 预先加载Route路由字典
      */
-    public void loadRouteInfos(){
+    public void loadRouteInfos(String ... moduleNames){
         $$RouteProvider.get();
+        if(moduleNames != null){
+            for(String tmp : moduleNames){
+                $$RouteProvider.get().loadRouteInfoFromTarget(tmp);
+            }
+        }
     }
 
     public __RouterIntf buildRouter(String url){

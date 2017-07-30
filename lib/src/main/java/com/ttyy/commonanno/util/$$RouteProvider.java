@@ -1,6 +1,7 @@
 package com.ttyy.commonanno.util;
 
 import com.ttyy.commonanno.__RouteLoader;
+import com.ttyy.commonanno.__Symbols;
 
 import java.util.HashMap;
 
@@ -55,6 +56,21 @@ public class $$RouteProvider {
         }
 
         return inst;
+    }
+
+    public void loadRouteInfoFromTarget(String moduleName){
+        try {
+            __RouteLoader provider = (__RouteLoader) Class.forName(__Symbols.ROUTE_PACKAGE + ".$RouteProvider$$" + moduleName).newInstance();
+
+            provider.loadInto(routeMaps);
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     public Class getMappedRouteClass(String uri) {

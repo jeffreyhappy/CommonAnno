@@ -10,6 +10,7 @@ import android.widget.ListView;
 import com.ttyy.commonanno.Injectors;
 import com.ttyy.commonanno.anno.BindLayout;
 import com.ttyy.commonanno.anno.BindView;
+import com.ttyy.commonanno.anno.Inject;
 import com.ttyy.commonanno.anno.OnClick;
 import com.ttyy.commonanno.anno.OnItemClick;
 import com.ttyy.commonanno.anno.OnLongClick;
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
         lv_1.setAdapter(new DemoAdapter());
         lv_2.setAdapter(new DemoAdapter());
+
+        Injectors.get().loadRouteInfos("app", "a_module", "b_module");
 
     }
 

@@ -46,8 +46,12 @@ import javax.tools.JavaFileObject;
  */
 public class __AnnotationProcessor extends AbstractProcessor {
 
+    final String OPTIONS_MODULE_KEY = "moduleName";
+
     Filer mFiler;
     Elements mElements;
+
+    String mUserSettedModuleName = null;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -58,6 +62,8 @@ public class __AnnotationProcessor extends AbstractProcessor {
         // logger init
         Messager mPrinter = processingEnv.getMessager();
         $ProcessorLog.init(mPrinter);
+
+        mUserSettedModuleName = processingEnv.getOptions().get(OPTIONS_MODULE_KEY);
     }
 
     @Override
@@ -94,14 +100,31 @@ public class __AnnotationProcessor extends AbstractProcessor {
         }
 
         // provider
-        $ProcessorLog.log("Getting RouteProvider Class Index From NamePool...");
-        String moduleIndex = $$RouteProviderModulePool.get().getTemplateModuleName();
-        $ProcessorLog.log("Find And Creating RouteProvider With ModuleIndex " + moduleIndex + " ...");
-
         BindRouteProviderClassModel routeProviderClassModel = $BindRouteFilter.filter(roundEnv, mElements);
-        routeProviderClassModel.setModuleName(moduleIndex);
 
-        if (moduleIndex.equals("0")) {
+        if(mUserSettedModuleName == null
+                || mUserSettedModuleName.trim().equals("")){
+            $ProcessorLog.log("Getting RouteProvider Class Suffix From NamePool...");
+            mUserSettedModuleName = $$RouteProviderModulePool.get().getTemplateUniqueProviderIndex();
+        }
+
+        $ProcessorLog.log("Creating RouteProvider With ModuleSuffix " + mUserSettedModuleName + " ...");
+        routeProviderClassModel.setModuleName(mUserSettedModuleName);
+
+        try {
+            // __RouteProvider Impl Class
+            JavaFileObject codeFile = mFiler.createSourceFile(routeProviderClassModel.getSelfClassName(), typeElement);
+
+            Writer writer = codeFile.openWriter();
+            writer.append(routeProviderClassModel.toClassCode());
+            writer.flush();
+            writer.close();
+
+        } catch (IOException e) {
+            $ProcessorLog.log("Create RouteProvider With ModuleIndex " + mUserSettedModuleName + " Error!");
+        }
+
+        if ($$RouteProviderModulePool.get().isNeedToBuildClassFile(BindRouteImplClassModel.ROUTE_IMPL.getSelfSimpleClassName())) {
             // Route Impl Class Can Only Create Once
             $ProcessorLog.log("Creating Class " + BindRouteImplClassModel.ROUTE_IMPL.getSelfClassName());
             try {
@@ -117,18 +140,6 @@ public class __AnnotationProcessor extends AbstractProcessor {
             }
         }
 
-        try {
-            // __RouteProvider Impl Class
-            JavaFileObject codeFile = mFiler.createSourceFile(routeProviderClassModel.getSelfClassName(), typeElement);
-
-            Writer writer = codeFile.openWriter();
-            writer.append(routeProviderClassModel.toClassCode());
-            writer.flush();
-            writer.close();
-
-        } catch (IOException e) {
-            $ProcessorLog.log("Create RouteProvider With ModuleIndex " + moduleIndex + " Error!");
-        }
         return false;
     }
 
