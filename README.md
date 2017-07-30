@@ -32,7 +32,8 @@
                 .navigate(this);
 ```
 
-# Module支持用户自定义设置
+## Module支持用户自定义设置，ModuleName 必须独一无二
+## Module用户不设置，那么从默认提供的Module池中获取，默认提供20个Name池
 ```Gradle
 android {
 
