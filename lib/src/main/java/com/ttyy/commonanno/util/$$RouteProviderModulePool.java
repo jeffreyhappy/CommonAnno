@@ -40,11 +40,26 @@ public class $$RouteProviderModulePool {
 
     public void findCurrentProjectModules(TypeElement te) {
 
-        String currentPackageTotalPath = getClass().getResource("").getPath();
-        Pattern pathPattern = Pattern.compile("file:(.+)/build/(.+)");
+         String currentPackageTotalPath = getClass().getResource("").getPath();
+        $ProcessorLog.log(""+currentPackageTotalPath);
+
+        // jar包引入路径样例
+        // file:xxxx/projectName/moduleName/libs/injectors.jar!/com/ttyy/commonanno/util/
+        // project引入路径样例
+        // file:xxxx/projectName/jarProject/build/libs/lib.jar!/com/ttyy/commonanno/util/
+
+        Pattern pathPattern = Pattern.compile("file:(.+)/(.+)\\.jar!/com/ttyy/commonanno/util/");
         Matcher matcher = pathPattern.matcher(currentPackageTotalPath);
         matcher.matches();
-        String currentProject = matcher.group(1);
+        String currentProject  = matcher.group(1);
+        if(currentProject.endsWith("build/libs")){
+            $ProcessorLog.log("compile injectors from module project!");
+            currentProject = currentProject.substring(0, currentProject.length() - 10);
+        }else if(currentProject.endsWith("libs")){
+            currentProject = currentProject.substring(0, currentProject.length() - 4);
+            $ProcessorLog.log("compile injectors from libs jar!");
+        }
+        $ProcessorLog.log("module path >>> "+currentProject);
 
         String hostProjectPath = new File(currentProject).getParent();
 
