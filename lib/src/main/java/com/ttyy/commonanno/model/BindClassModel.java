@@ -808,12 +808,15 @@ public class BindClassModel {
         // Function void injectExtras(Object source, T target) Start
         sb.append("public void injectExtras(Object source, T target){\n");
 
+        sb.append("Intent intent = null;\n");
         // Inject Extras Only For Source InstanceOf Activity
-        sb.append("if(! (source instanceof Activity) ){\n");
-        sb.append("return;\n");
-        sb.append("\n}\n");
-
-        sb.append("Intent intent = ((Activity)source).getIntent();\n");
+        sb.append("if(source instanceof Activity){\n");
+        sb.append("intent = ((Activity)source).getIntent();\n");
+        sb.append("\n}else if(source instanceof View){\n");
+        sb.append("android.content.Context ctx = ((View)source).getContext();\n");
+        sb.append("if(ctx instanceof Activity){\n");
+        sb.append("intent = ((Activity)ctx).getIntent();\n");
+        sb.append("\n}else{\n return;\n}\n}else{\n return;\n}\n");
 
         // get intent data from annotation param key
         for (BindExtraModel extra : extras) {
