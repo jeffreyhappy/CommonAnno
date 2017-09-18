@@ -30,6 +30,9 @@ public class BindExtraModel {
 
     public BindExtraModel setFieldType(String type){
         this.strFieldType = type;
+        if(this.strFieldType.contains("<")){
+            this.strFieldType = this.strFieldType.substring(0, this.strFieldType.indexOf("<"));
+        }
         return this;
     }
 
