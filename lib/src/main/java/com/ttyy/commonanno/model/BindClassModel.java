@@ -840,8 +840,14 @@ public class BindClassModel {
 
                 sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
                         .append("intent.getStringExtra(\"").append(extra.getExtraKey()).append("\");\n");
+            }else if(extra.getFieldType().equals("boolean")
+                    || extra.getFieldType().equals("java.lang.Boolean")){
+
+                sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
+                        .append("intent.getBooleanExtra(\"").append(extra.getExtraKey()).append("\", false);\n");
             }else{
                 sb.append("if(");
+
                 sb.append("java.io.Serializable.class.isAssignableFrom(")
                         .append(extra.getFieldType()).append(".class)");
                 sb.append("){\n");
