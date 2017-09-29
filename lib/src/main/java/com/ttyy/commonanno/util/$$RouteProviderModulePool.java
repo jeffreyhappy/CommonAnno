@@ -3,6 +3,7 @@ package com.ttyy.commonanno.util;
 import com.ttyy.commonanno.__Symbols;
 
 import java.io.File;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -59,6 +60,10 @@ public class $$RouteProviderModulePool {
             currentProject = currentProject.substring(0, currentProject.length() - 4);
             $ProcessorLog.log("compile injectors from libs jar!");
         }
+        
+        // 此时获取的地址是url编码过的，如空格以%20形式展示
+        // 需要进行url解码
+        currentProject = URLDecoder.decode(currentProject);
         $ProcessorLog.log("module path >>> "+currentProject);
 
         String hostProjectPath = new File(currentProject).getParent();
