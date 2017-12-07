@@ -29,6 +29,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
 
@@ -196,9 +197,8 @@ public class $BindClassFilter {
             BindExtra bindExtra = e.getAnnotation(BindExtra.class);
 
             BindExtraModel extra = new BindExtraModel();
-            TypeElement type = (TypeElement) e;
             extra.setFieldName(e.getSimpleName().toString())
-                    .setFieldType(type);
+                    .setFieldType(e);
 
             if(bindExtra.value() == null
                     || bindExtra.value().trim().equals("")){
