@@ -196,8 +196,9 @@ public class $BindClassFilter {
             BindExtra bindExtra = e.getAnnotation(BindExtra.class);
 
             BindExtraModel extra = new BindExtraModel();
+            TypeElement type = (TypeElement) e;
             extra.setFieldName(e.getSimpleName().toString())
-                    .setFieldType(e.asType().toString());
+                    .setFieldType(type);
 
             if(bindExtra.value() == null
                     || bindExtra.value().trim().equals("")){
