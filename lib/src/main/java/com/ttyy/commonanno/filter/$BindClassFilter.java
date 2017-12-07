@@ -19,6 +19,7 @@ import com.ttyy.commonanno.model.event.BindEventMethodModel;
 import com.ttyy.commonanno.model.event.BindItemClickModel;
 import com.ttyy.commonanno.model.event.BindLongClickModel;
 import com.ttyy.commonanno.model.route.BindExtraModel;
+import com.ttyy.commonanno.util.$ProcessorLog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
