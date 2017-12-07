@@ -846,62 +846,32 @@ public class BindClassModel {
                 sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
                         .append("intent.getBooleanExtra(\"").append(extra.getExtraKey()).append("\", false);\n");
             }else{
+                sb.append("if(");
 
-                try {
-                    Class clazz = Class.forName(extra.getFieldTypePath());
+                sb.append("java.io.Serializable.class.isAssignableFrom(")
+                        .append(extra.getFieldType()).append(".class)");
+                sb.append("){\n");
 
-                    if(java.io.Serializable.class.isAssignableFrom(clazz)){
-                        sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
-                                .append("(").append(extra.getFieldType()).append(")")
-                                .append("intent.getSerializableExtra(\"").append(extra.getExtraKey()).append("\");\n");
-                    }else{
-                        Class clazzParcelable = Class.forName("android.os.Parcelable");
-                        if(clazzParcelable.isAssignableFrom(clazz)){
-                            sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
-                                    .append("(").append(extra.getFieldType()).append(")")
-                                    .append("intent.getParcelableExtra(\"").append(extra.getExtraKey()).append("\");\n");
-                        }else {
-                            sb.append("throw new UnsupportedOperationException(\" Not Support For Extra ")
-                                    .append(extra.getFieldName())
-                                    .append(" Type ")
-                                    .append(extra.getFieldType())
-                                    .append("\");\n");
-                        }
-                    }
+                sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
+                        .append("(").append(extra.getFieldType()).append(")")
+                        .append("intent.getSerializableExtra(\"").append(extra.getExtraKey()).append("\");\n");
 
-                } catch (ClassNotFoundException e) {
-                    sb.append("throw new ClassNotFoundException(\" Class Not Found ")
-                            .append(extra.getFieldName())
-                            .append(" Type ")
-                            .append(extra.getFieldType())
-                            .append("\");\n");
-                }
+                sb.append("\n} else if(");
+                sb.append("android.os.Parcelable.class.isAssignableFrom(")
+                        .append(extra.getFieldType()).append(".class)");
+                sb.append("){\n");
 
-//
-//                sb.append("java.io.Serializable.class.isAssignableFrom(")
-//                        .append(extra.getFieldType()).append(".class)");
-//                sb.append("){\n");
-//
-//                sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
-//                        .append("(").append(extra.getFieldType()).append(")")
-//                        .append("intent.getSerializableExtra(\"").append(extra.getExtraKey()).append("\");\n");
-//
-//                sb.append("\n} else if(");
-//                sb.append("android.os.Parcelable.class.isAssignableFrom(")
-//                        .append(extra.getFieldType()).append(".class)");
-//                sb.append("){\n");
-//
-//                sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
-//                        .append("(").append(extra.getFieldType()).append(")")
-//                        .append("intent.getParcelableExtra(\"").append(extra.getExtraKey()).append("\");\n");
-//
-//                sb.append("\n} else {\n");
-//                sb.append("throw new UnsupportedOperationException(\" Not Support For Extra ")
-//                        .append(extra.getFieldName())
-//                        .append(" Type ")
-//                        .append(extra.getFieldType())
-//                        .append("\");\n");
-//                sb.append("\n}\n");
+                sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
+                        .append("(").append(extra.getFieldType()).append(")")
+                        .append("intent.getParcelableExtra(\"").append(extra.getExtraKey()).append("\");\n");
+
+                sb.append("\n} else {\n");
+                sb.append("throw new UnsupportedOperationException(\" Not Support For Extra ")
+                        .append(extra.getFieldName())
+                        .append(" Type ")
+                        .append(extra.getFieldType())
+                        .append("\");\n");
+                sb.append("\n}\n");
             }
 
         }
