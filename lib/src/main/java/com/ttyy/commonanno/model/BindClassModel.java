@@ -127,7 +127,7 @@ public class BindClassModel {
         return this;
     }
 
-    public BindClassModel addExtra(BindExtraModel model){
+    public BindClassModel addExtra(BindExtraModel model) {
         this.extras.add(model);
         return this;
     }
@@ -821,31 +821,46 @@ public class BindClassModel {
         // get intent data from annotation param key
         for (BindExtraModel extra : extras) {
 
-            if(extra.getFieldType().equals("int")
-                    || extra.getFieldType().equals("java.lang.Integer")){
+            if (extra.getFieldType().equals("int")
+                    || extra.getFieldType().equals("java.lang.Integer")) {
 
                 sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
                         .append("intent.getIntExtra(\"").append(extra.getExtraKey()).append("\", -1);\n");
-            }else if(extra.getFieldType().equals("float")
-                    || extra.getFieldType().equals("java.lang.Float")){
+            } else if (extra.getFieldType().equals("float")
+                    || extra.getFieldType().equals("java.lang.Float")) {
 
                 sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
                         .append("intent.getFloatExtra(\"").append(extra.getExtraKey()).append("\", -1);\n");
-            }else if(extra.getFieldType().equals("double")
-                    || extra.getFieldType().equals("java.lang.Double")){
+            } else if (extra.getFieldType().equals("double")
+                    || extra.getFieldType().equals("java.lang.Double")) {
 
                 sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
                         .append("intent.getDoubleExtra(\"").append(extra.getExtraKey()).append("\", -1);\n");
-            }else if(extra.getFieldType().equals("java.lang.String")){
+            } else if (extra.getFieldType().equals("java.lang.String")) {
 
                 sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
                         .append("intent.getStringExtra(\"").append(extra.getExtraKey()).append("\");\n");
-            }else if(extra.getFieldType().equals("boolean")
-                    || extra.getFieldType().equals("java.lang.Boolean")){
+            } else if (extra.getFieldType().equals("boolean")
+                    || extra.getFieldType().equals("java.lang.Boolean")) {
 
                 sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
                         .append("intent.getBooleanExtra(\"").append(extra.getExtraKey()).append("\", false);\n");
-            }else{
+            } else if (extra.getFieldType().equals("long")
+                    || extra.getFieldType().equals("java.lang.Long")) {
+
+                sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
+                        .append("intent.getLongExtra(\"").append(extra.getExtraKey()).append("\", -1);\n");
+            } else if (extra.getFieldType().equals("byte")
+                    || extra.getFieldType().equals("java.lang.Byte")) {
+
+                sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
+                        .append("intent.getByteExtra(\"").append(extra.getExtraKey()).append("\", (byte)0);\n");
+            } else if (extra.getFieldType().equals("char")
+                    || extra.getFieldType().equals("java.lang.Character")) {
+
+                sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
+                        .append("intent.getCharExtra(\"").append(extra.getExtraKey()).append("\", ' ');\n");
+            } else {
                 sb.append("if(");
 
                 sb.append("java.io.Serializable.class.isAssignableFrom(")
@@ -862,7 +877,6 @@ public class BindClassModel {
                 sb.append("){\n");
 
                 sb.append("target.").append(extra.getFieldName()).append(__Symbols.MATH_EQUAL)
-                        .append("(").append(extra.getFieldType()).append(")")
                         .append("intent.getParcelableExtra(\"").append(extra.getExtraKey()).append("\");\n");
 
                 sb.append("\n} else {\n");
