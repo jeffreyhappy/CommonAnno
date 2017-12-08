@@ -19,7 +19,6 @@ import com.ttyy.commonanno.model.event.BindEventMethodModel;
 import com.ttyy.commonanno.model.event.BindItemClickModel;
 import com.ttyy.commonanno.model.event.BindLongClickModel;
 import com.ttyy.commonanno.model.route.BindExtraModel;
-import com.ttyy.commonanno.util.$ProcessorLog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +29,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
 
@@ -199,7 +197,7 @@ public class $BindClassFilter {
 
             BindExtraModel extra = new BindExtraModel();
             extra.setFieldName(e.getSimpleName().toString())
-                    .setFieldType(e);
+                    .setFieldType(e.asType().toString());
 
             if(bindExtra.value() == null
                     || bindExtra.value().trim().equals("")){
